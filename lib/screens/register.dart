@@ -49,8 +49,8 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Créer mon Compte 😎',
-          style: TextStyle(fontSize: 27.0),
+          'CRÉER MON COMPTE 📰',
+          style: TextStyle(fontSize: 25.0),
         ),
         centerTitle: true,
       ),

@@ -126,7 +126,7 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 20,
                 ),
-                kTextButton('Update', () {
+                kTextButton('Mettre à jour ...', () {
                   if (formKey.currentState!.validate()) {
                     setState(() {
                       loading = true;

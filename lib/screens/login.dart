@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Connexion 🙂',
+          'SE CONNECTER 📰',
           style: TextStyle(fontSize: 27.0),
         ),
         centerTitle: true,

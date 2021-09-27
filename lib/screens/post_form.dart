@@ -128,7 +128,7 @@ class _PostFormState extends State<PostForm> {
                       maxLines: 9,
                       validator: (val) => val!.isEmpty ? 'Champ requit' : null,
                       decoration: InputDecoration(
-                          hintText: "Post body...",
+                          hintText: "Description de la publication ...",
                           border: OutlineInputBorder(
                               borderSide:
                                   BorderSide(width: 1, color: Colors.black38))),
