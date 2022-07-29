@@ -1,0 +1,45 @@
+import 'dart:io';
+
+import 'package:bloc/bloc.dart';
+import 'package:blogapp/constant.dart';
+import 'package:blogapp/features/service/post_provider.dart';
+import 'package:blogapp/models/api_response.dart';
+import 'package:blogapp/features/service/user_provider.dart';
+import 'package:meta/meta.dart';
+
+part 'post_edit_state.dart';
+
+class PostEditCubit extends Cubit<PostEditState> {
+  PostEditCubit() : super(PostEditInitial());
+
+  final PostApiProvider _apiProvider = PostApiProvider();
+
+  Future createPost(final String text, final File? _imageFile) async {
+    emit(PostEditStateLoading());
+    String? image = _imageFile == null
+        ? null
+        : UserApiProvider().getStringImage(_imageFile);
+    ApiResponse response = await _apiProvider.createPost(text, image);
+
+    if (response.error == null) {
+      emit(PostEditStateFailed('1'));
+    } else if (response.error == unauthorized) {
+      emit(PostEditStateFailed('2'));
+    } else {
+      emit(PostEditStateFailed('3'));
+    }
+  }
+
+  // edit post
+  Future editPost(int postId, String text) async {
+    emit(PostEditStateLoading());
+    ApiResponse response = await _apiProvider.editPost(postId, text);
+    if (response.error == null) {
+      emit(PostEditStateFailed('1'));
+    } else if (response.error == unauthorized) {
+      emit(PostEditStateFailed('2'));
+    } else {
+      emit(PostEditStateFailed('3'));
+    }
+  }
+}

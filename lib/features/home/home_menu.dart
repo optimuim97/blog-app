@@ -1,0 +1,126 @@
+import 'package:blogapp/features/post/post_edit/view/post_edit_page.dart';
+import 'package:blogapp/features/post/post_page/post_page.dart';
+import 'package:blogapp/features/profile/profile_page.dart';
+import 'package:flutter/material.dart';
+import 'package:moony_nav_bar/moony_nav_bar.dart';
+// import 'package:story/features/home/home_screen_page.dart';
+
+class HomeMenu extends StatefulWidget {
+  const HomeMenu({Key? key}) : super(key: key);
+
+  @override
+  State<HomeMenu> createState() => _HomeMenuState();
+}
+
+class _HomeMenuState extends State<HomeMenu> {
+  final Widget _screen1 = const HomePostPage();
+  final Widget _screen2 = const HomePostPage();
+  // final Widget _screen3 = const PostEditPage(
+  //   btnTitle: 'Poster',
+  //   post: null,
+  // );
+  final Widget _screen4 = const HomePostPage();
+  final Widget _screen5 = const ProfilePage();
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PostEditPage(
+                          btnTitle: 'Poster',
+                          post: null,
+                        )));
+              },
+              icon: Icon(
+                Icons.add_circle_outline,
+                color: Colors.black,
+              ))
+        ],
+        title: Text(
+          'Logo',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 1,
+      ),
+      backgroundColor: Colors.grey.shade300,
+      body: getBody(),
+      bottomNavigationBar: MoonyNavigationBar(
+        items: <NavigationBarItem>[
+          NavigationBarItem(
+              icon: Icons.widgets_outlined,
+              color: Colors.pink,
+              onTap: () {
+                onTapHandler(0);
+              }),
+          NavigationBarItem(
+              icon: Icons.explore,
+              activeIcon: Icons.explore,
+              color: Colors.pink,
+              indicatorColor: Colors.pink,
+              onTap: () {
+                onTapHandler(1);
+              }),
+          // NavigationBarItem(
+          //     icon: Icons.add_circle_outline,
+          //     activeIcon: Icons.add_circle_outline,
+          //     color: Colors.pink,
+          //     indicatorColor: Colors.pink,
+          //     onTap: () {
+          //       onTapHandler(2);
+          //     }),
+          NavigationBarItem(
+              icon: Icons.shopping_bag_outlined,
+              color: Colors.pink,
+              onTap: () {
+                onTapHandler(3);
+              }),
+          NavigationBarItem(
+              icon: Icons.person_outline,
+              color: Colors.pink,
+              onTap: () {
+                onTapHandler(4);
+              })
+        ],
+        style: MoonyNavStyle(
+          activeColor: Colors.pink,
+          indicatorPosition: IndicatorPosition.TOP,
+          indicatorType: IndicatorType.POINT,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getBody() {
+    if (selectedIndex == 0) {
+      return _screen1;
+    } else if (selectedIndex == 1) {
+      return _screen2;
+      // } else if (selectedIndex == 2) {
+      //   return _screen3;}
+    } else if (selectedIndex == 2) {
+      return _screen4;
+    }
+    return _screen5;
+  }
+
+  void onTapHandler(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+}

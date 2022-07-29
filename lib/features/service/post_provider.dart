@@ -1,17 +1,13 @@
 
-
-
-
-
 import 'dart:convert';
-import 'dart:developer';
 
+import 'package:blogapp/constant.dart';
 import 'package:blogapp/models/api_response.dart';
 import 'package:blogapp/models/post.dart';
 import 'package:blogapp/services/user_service.dart';
 import 'package:http/http.dart' as http;
+class PostApiProvider {
 
-import '../constant.dart';
 
 // get all posts
 Future<ApiResponse> getPosts() async {
@@ -23,10 +19,10 @@ Future<ApiResponse> getPosts() async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-log('ok');
+
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
+        apiResponse.data = jsonDecode(response.body)['posts'].map((p) => Post.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
         apiResponse.data as List<dynamic>;
         break;
@@ -183,4 +179,6 @@ Future<ApiResponse> likeUnlikePost(int postId) async {
     apiResponse.error = serverError;
   }
   return apiResponse;
+}
+
 }

@@ -1,9 +1,25 @@
+
+import 'package:blogapp/features/auth/logic/auth_cubit_cubit.dart';
+import 'package:blogapp/features/post/post_edit/logic/post_edit_cubit.dart';
+import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'screens/loading.dart';
 
 void main() {
-  runApp(App());
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (context) => AuthCubit(),
+      ),
+       BlocProvider(
+        create: (context) => PostCubit(),
+      ),
+      BlocProvider(create: (context)=>PostEditCubit())
+    ],
+    child: App(),
+  ));
 }
 
 class App extends StatelessWidget {
@@ -11,7 +27,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          fontFamily: 'Aclonica',
+          // fontFamily: 'Aclonica',
           primaryColor: Colors.blue,
           accentColor: Colors.white),
       debugShowCheckedModeBanner: false,

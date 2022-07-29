@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:blogapp/constant.dart';
+import 'package:blogapp/features/auth/view/login_page.dart';
 import 'package:blogapp/models/api_response.dart';
 import 'package:blogapp/models/user.dart';
 import 'package:blogapp/screens/entity_screen.dart';
@@ -55,14 +56,16 @@ class _HomeState extends State<Home> {
             onPressed: () {
               logout().then((value) => {
                     Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Login()),
+                        MaterialPageRoute(builder: (context) => LoginPage()),
                         (route) => false)
                   });
             },
           )
         ],
       ),
-      body: currentIndex == 0 ? PostScreen() : Profile(),
+      body: currentIndex == 0 ? Container()
+      // PostScreen() 
+      : Profile(),
       drawer: MyDrawer(
         onTap: (ctx, i) {
           setState(() {
@@ -73,10 +76,10 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PostForm(
-                    title: 'Ajouter une nouveau post',
-                  )));
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (context) => PostForm(
+          //           title: 'Ajouter une nouveau post',
+          //         )));
         },
         child: Icon(Icons.add),
       ),
