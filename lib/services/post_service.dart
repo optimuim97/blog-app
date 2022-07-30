@@ -16,16 +16,19 @@ import '../constant.dart';
 // get all posts
 Future<ApiResponse> getPosts() async {
   ApiResponse apiResponse = ApiResponse();
+  String token = await getToken();
+  log(token);
   try {
-    String token = await getToken();
+    
     final response = await http.get(Uri.parse(postsURL),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-log('ok');
+  
     switch(response.statusCode){
       case 200:
+   
         apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
         apiResponse.data as List<dynamic>;

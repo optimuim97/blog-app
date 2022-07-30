@@ -2,7 +2,7 @@ import 'user.dart';
 
 class Post {
   int? id;
-  Null? userId;
+  int? userId;
   String? title;
   String? description;
   String? publisherName;
@@ -18,6 +18,8 @@ class Post {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+int ? likesCount;
+            int ? commentsCount ;
 
   Post(
       {this.id,
@@ -36,7 +38,8 @@ class Post {
       this.entityId,
       this.createdAt,
       this.updatedAt,
-      this.deletedAt});
+      this.deletedAt,
+      this.commentsCount,this.likesCount});
 
   Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -56,6 +59,8 @@ class Post {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    commentsCount=json['comments_count'];
+    likesCount=json['likes_count'];
   }
 
   Map<String, dynamic> toJson() {

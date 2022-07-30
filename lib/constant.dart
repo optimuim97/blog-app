@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+// const baseURL = 'http://192.168.121.201:8000/api';
 const baseURL = 'http://192.168.1.68:8000/api';
-// const baseURL = 'http://192.168.1.112:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
@@ -60,7 +60,7 @@ Row kLoginRegisterHint(String text, String label, Function onTap) {
 
 // likes and comment btn
 
-Widget kLikeAndComment(int value, String icon, Color color, Function onTap ,double width) {
+Widget kLikeAndComment(int value, Color color, Function onTap ,double width , IconData icon) {
   return SizedBox(
     width: 60,
     child: Expanded(
@@ -73,16 +73,16 @@ Widget kLikeAndComment(int value, String icon, Color color, Function onTap ,doub
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SvgPicture.asset('assets/images/${icon}',
-width: width,
-                    color: color, semanticsLabel: 'A red up arrow'),
-                // Icon(
-                //   icon,
-                //   size: 22,
-                //   color: color,
-                // ),
+//                 SvgPicture.asset('assets/images/${icon}',
+// width: width,
+//                     color: color, semanticsLabel: 'A red up arrow'),
+                Icon(
+                  icon,
+                  size: 22,
+                  color: color,
+                ),
                 SizedBox(width: 4),
-                Text('$value')
+                Text('$value',style: TextStyle(color: color),)
               ],
             ),
           ),

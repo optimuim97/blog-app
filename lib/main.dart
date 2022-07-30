@@ -1,5 +1,5 @@
-
 import 'package:blogapp/features/auth/logic/auth_cubit_cubit.dart';
+import 'package:blogapp/features/post/post_comment/logic/post_comment_cubit.dart';
 import 'package:blogapp/features/post/post_edit/logic/post_edit_cubit.dart';
 import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +13,11 @@ void main() {
       BlocProvider(
         create: (context) => AuthCubit(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (context) => PostCubit(),
       ),
-      BlocProvider(create: (context)=>PostEditCubit())
+      BlocProvider(create: (context) => PostEditCubit()),
+      BlocProvider(create: (context) => PostCommentCubit())
     ],
     child: App(),
   ));

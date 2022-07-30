@@ -51,49 +51,49 @@ class _HomeMenuState extends State<HomeMenu> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
       ),
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.white,
       body: getBody(),
       bottomNavigationBar: MoonyNavigationBar(
         items: <NavigationBarItem>[
           NavigationBarItem(
               icon: Icons.widgets_outlined,
-              color: Colors.pink,
+              color: Colors.blue,
               onTap: () {
                 onTapHandler(0);
               }),
           NavigationBarItem(
               icon: Icons.explore,
               activeIcon: Icons.explore,
-              color: Colors.pink,
-              indicatorColor: Colors.pink,
+              color: Colors.blue,
+              indicatorColor: Colors.blue,
               onTap: () {
                 onTapHandler(1);
               }),
           // NavigationBarItem(
           //     icon: Icons.add_circle_outline,
           //     activeIcon: Icons.add_circle_outline,
-          //     color: Colors.pink,
-          //     indicatorColor: Colors.pink,
+          //     color: Colors.blue,
+          //     indicatorColor: Colors.blue,
           //     onTap: () {
           //       onTapHandler(2);
           //     }),
           NavigationBarItem(
               icon: Icons.shopping_bag_outlined,
-              color: Colors.pink,
+              color: Colors.blue,
               onTap: () {
                 onTapHandler(3);
               }),
           NavigationBarItem(
               icon: Icons.person_outline,
-              color: Colors.pink,
+              color: Colors.blue,
               onTap: () {
                 onTapHandler(4);
               })
         ],
         style: MoonyNavStyle(
-          activeColor: Colors.pink,
+          activeColor: Colors.blue,
           indicatorPosition: IndicatorPosition.TOP,
           indicatorType: IndicatorType.POINT,
           borderRadius: const BorderRadius.only(

@@ -29,7 +29,7 @@ final bool obscureText;
             borderRadius: BorderRadius.circular(15.7),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.pink.shade50),
+            borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(15.7),
           ),
         ),

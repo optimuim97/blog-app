@@ -1,31 +1,38 @@
-
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:blogapp/constant.dart';
-import 'package:blogapp/models/api_response.dart';
-import 'package:blogapp/models/post.dart';
-import 'package:blogapp/services/user_service.dart';
+import 'package:blogapp/features/service/user_provider.dart';
+import 'package:blogapp/models/comment.dart';
 import 'package:http/http.dart' as http;
-class PostApiProvider {
+import 'package:blogapp/models/api_response.dart';
 
 
-// get all posts
-Future<ApiResponse> getPosts() async {
+class CommentApiProvider {
+
+
+
+
+
+
+
+// Get post comments
+Future<ApiResponse> getComments(int postId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    String token = await getToken();
-    final response = await http.get(Uri.parse(postsURL),
+    String token = await UserApiProvider().getToken();
+    final response = await http.get(Uri.parse('$postsURL/$postId/comments'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
- log('bbb'+response.body.toString());
+    
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
-        // we get list of posts, so we need to map each item to post model
+        // map each comments to comment model
+        apiResponse.data = jsonDecode(response.body)['comments'].map((p) => Comment.fromJson(p)).toList();
         apiResponse.data as List<dynamic>;
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -42,37 +49,31 @@ Future<ApiResponse> getPosts() async {
 }
 
 
-// Create post
-Future<ApiResponse> createPost(String body, String? image) async {
+
+// Create comment
+Future<ApiResponse> createComment(int postId, String? comment) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    String token = await getToken();
-    final response = await http.post(Uri.parse(postsURL),
+    String token = await UserApiProvider().getToken();
+    final response = await http.post(Uri.parse('$postsURL/$postId/comments'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
-    }, body: image !=null ? {
-      'body': body,
-      'image': image
-    } : {
-      'body': body
+    }, body: {
+      'comment': comment
     });
-
-    // here if the image is null we just send the body, if not null we send the image too
 
     switch(response.statusCode){
       case 200:
         apiResponse.data = jsonDecode(response.body);
         break;
-      case 422:
-        final errors = jsonDecode(response.body)['errors'];
-        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
         break;
       default:
-        print(response.body);
         apiResponse.error = somethingWentWrong;
         break;
     }
@@ -84,18 +85,50 @@ Future<ApiResponse> createPost(String body, String? image) async {
 }
 
 
-
-// Edit post
-Future<ApiResponse> editPost(int postId, String body) async {
+// Delete comment
+Future<ApiResponse> deleteComment(int commentId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    String token = await getToken();
-    final response = await http.put(Uri.parse('$postsURL/$postId'),
+    String token = await UserApiProvider().getToken();
+    final response = await http.delete(Uri.parse('$commentsURL/$commentId'),
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }
+  catch (e){
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+
+// Edit comment
+Future<ApiResponse> editComment(int commentId, String comment) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await UserApiProvider().getToken();
+    final response = await http.put(Uri.parse('$commentsURL/$commentId'),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: {
-      'body': body
+      'comment': comment
     });
 
     switch(response.statusCode){
@@ -118,68 +151,4 @@ Future<ApiResponse> editPost(int postId, String body) async {
   }
   return apiResponse;
 }
-
-
-// Delete post
-Future<ApiResponse> deletePost(int postId) async {
-  ApiResponse apiResponse = ApiResponse();
-  try {
-    String token = await getToken();
-    final response = await http.delete(Uri.parse('$postsURL/$postId'),
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    });
-
-    switch(response.statusCode){
-      case 200:
-        apiResponse.data = jsonDecode(response.body)['message'];
-        break;
-      case 403:
-        apiResponse.error = jsonDecode(response.body)['message'];
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
-    }
-  }
-  catch (e){
-    apiResponse.error = serverError;
-  }
-  return apiResponse;
-}
-
-
-// Like or unlike post
-Future<ApiResponse> likeUnlikePost(int postId) async {
-  ApiResponse apiResponse = ApiResponse();
-  try {
-    String token = await getToken();
-    final response = await http.post(Uri.parse('$postsURL/$postId/likes'),
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    });
-
-    switch(response.statusCode){
-      case 200:
-        apiResponse.data = jsonDecode(response.body)['message'];
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
-    }
-  }
-  catch (e){
-    apiResponse.error = serverError;
-  }
-  return apiResponse;
-}
-
 }

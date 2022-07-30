@@ -67,7 +67,7 @@ class _CommentScreenState extends State<CommentScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}')
       ));
-    }
+    } 
   }
 
   // edit comment

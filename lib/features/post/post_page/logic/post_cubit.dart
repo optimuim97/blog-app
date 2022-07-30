@@ -14,9 +14,10 @@ class PostCubit extends Cubit<PostState> {
   PostCubit() : super(PostInitial());
     final PostApiProvider _apiProvider = PostApiProvider();
   Future postFetch() async {
-    emit(PostStateLoading());
+    emit(PostStateLoading()); 
     try {
       var result = await _apiProvider.getPosts();
+      log(result.error .toString());
       emit(PostStateLoaded(result));
     } catch (e) {
       emit(PostStateError(e.toString()));
