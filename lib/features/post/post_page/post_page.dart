@@ -266,7 +266,7 @@ class _HomePostPageState extends State<HomePostPage> {
             }
             return SizedBox(
                 height:
-                    MediaQuery.of(context).size.height * 0.3 * _postList.length,
+                    MediaQuery.of(context).size.height * 0.25 * _postList.length,
                 child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: _postList.length,
@@ -281,7 +281,7 @@ class _HomePostPageState extends State<HomePostPage> {
                                   )));
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.only(left :20.0,right: 20.0,top: 10),
                           child: Container(
                             height: 200,
                             decoration: BoxDecoration(
@@ -292,8 +292,7 @@ class _HomePostPageState extends State<HomePostPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                post.cover!.isNotEmpty
-                                    ? CachedNetworkImage(
+                               CachedNetworkImage(
                                         imageUrl: post.cover!,
                                         imageBuilder:
                                             (context, imageProvider) =>
@@ -354,14 +353,14 @@ class _HomePostPageState extends State<HomePostPage> {
                                                                 Radius.circular(
                                                                     10)))),
                                       )
-                                    : Container(),
+                                  ,
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
                                     child: Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 10.0, right: 10, bottom: 10),
+                                      top: 15.0, right: 10, ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -372,15 +371,23 @@ class _HomePostPageState extends State<HomePostPage> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
-                                            fontSize: 18),
+                                            fontSize: 16),
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
-                                        ListTile(
+                                      ListTile(
+                                        title: Text(
+                                          post.publisherName.toString(),
+                                          style: TextStyle(
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                              color: Colors.grey,
+                                              fontSize: 14),
+                                        ),
                                         leading: Container(
-                                          width: 50,
-                                          height: 50,
+                                          width: 35,
+                                          height: 35,
                                           decoration: BoxDecoration(
                                               image: post.publisherImage != null
                                                   ? DecorationImage(
@@ -391,13 +398,16 @@ class _HomePostPageState extends State<HomePostPage> {
                                               borderRadius:
                                                   BorderRadius.circular(25),
                                               color: Colors.blue),
-                                          child:  post.publisherImage != null
+                                          child: post.publisherImage != null
                                               ? SizedBox()
                                               : Center(
                                                   child: Text(
-                                                    post.publisherName!.length >1 ?
-                                                         post.publisherName.toString()
-                                                        .substring(0, 1):'',
+                                                    post.publisherName!.length >
+                                                            1
+                                                        ? post.publisherName
+                                                            .toString()
+                                                            .substring(0, 1)
+                                                        : '',
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -407,11 +417,10 @@ class _HomePostPageState extends State<HomePostPage> {
                                                 ),
                                         ),
                                         contentPadding: EdgeInsets.all(0),
-                                        ),
-                                      
+                                      ),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            right: 5, top: 15, bottom: 10),
+                                            right: 5, top: 5,),
                                         child: Row(
                                           children: [
                                             SizedBox(
@@ -443,20 +452,20 @@ class _HomePostPageState extends State<HomePostPage> {
                                               post.commentsCount!,
                                               Colors.blue,
                                               () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CommentScreen(
-                                                              postId: post.id,
-                                                            )));
+                                                // Navigator.of(context).push(
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             CommentScreen(
+                                                //               postId: post.id,
+                                                //             )));
                                               },
                                               30,
                                               Icons.comment,
                                             ),
+                                            IconButton(onPressed: (){}, icon: Icon(Icons.bookmark_border,color: Colors.blue,))
                                           ],
                                         ),
                                       ),
-                                    
                                     ],
                                   ),
                                 ))
