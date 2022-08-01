@@ -1,4 +1,5 @@
-import 'package:blogapp/features/entity/view/entity_page.dart';
+
+import 'package:blogapp/features/explore/explore_page.dart';
 import 'package:blogapp/features/post/post_edit/view/post_edit_page.dart';
 import 'package:blogapp/features/post/post_page/post_page.dart';
 import 'package:blogapp/features/profile/profile_page.dart';
@@ -15,7 +16,7 @@ class HomeMenu extends StatefulWidget {
 
 class _HomeMenuState extends State<HomeMenu> {
   final Widget _screen1 = const HomePostPage();
-  final Widget _screen2 = const EntityPage();
+  final Widget _screen2 = const ExplorePage();
   // final Widget _screen3 = const PostEditPage(
   //   btnTitle: 'Poster',
   //   post: null,
@@ -34,18 +35,31 @@ class _HomeMenuState extends State<HomeMenu> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PostEditPage(
-                          btnTitle: 'Poster',
-                          post: null,
-                        )));
-              },
-              icon: Icon(
-                Icons.add_circle_outline,
-                color: Colors.black,
-              ))
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 30,
+              decoration: BoxDecoration(
+                  color: Colors.lightBlue.shade50,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  )),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => PostEditPage(
+                                  btnTitle: 'Poster',
+                                  post: null,
+                                )),
+                        (route) => false);
+                  },
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.blue,
+                  )),
+            ),
+          )
         ],
         title: Text(
           'Logo',
@@ -72,14 +86,6 @@ class _HomeMenuState extends State<HomeMenu> {
               onTap: () {
                 onTapHandler(1);
               }),
-          // NavigationBarItem(
-          //     icon: Icons.add_circle_outline,
-          //     activeIcon: Icons.add_circle_outline,
-          //     color: Colors.blue,
-          //     indicatorColor: Colors.blue,
-          //     onTap: () {
-          //       onTapHandler(2);
-          //     }),
           NavigationBarItem(
               icon: Icons.shopping_bag_outlined,
               color: Colors.blue,

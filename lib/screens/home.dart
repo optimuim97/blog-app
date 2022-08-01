@@ -6,14 +6,14 @@ import 'package:blogapp/models/api_response.dart';
 import 'package:blogapp/models/user.dart';
 import 'package:blogapp/screens/entity_screen.dart';
 import 'package:blogapp/screens/entity_type.screen.dart';
-import 'package:blogapp/screens/post_screen.dart';
+
 import 'package:blogapp/screens/profile.dart';
 import 'package:blogapp/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'login.dart';
-import 'post_form.dart';
+
 import '../constant.dart';
 
 class Home extends StatefulWidget {
@@ -117,14 +117,14 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   User? user;
   bool loading = true;
-  File? _imageFile;
+  File? imageFile;
   final _picker = ImagePicker();
 
   Future getImage() async {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        imageFile = File(pickedFile.path);
       });
     }
   }
@@ -182,14 +182,14 @@ class _MyDrawerState extends State<MyDrawer> {
                         //   height: 110,
                         //   decoration: BoxDecoration(
                         //       borderRadius: BorderRadius.circular(60),
-                        //       image: _imageFile == null
+                        //       image: imageFile == null
                         //           ? user!.image != null
                         //               ? DecorationImage(
                         //                   image: NetworkImage('${user!.image}'),
                         //                   fit: BoxFit.cover)
                         //               : null
                         //           : DecorationImage(
-                        //               image: FileImage(_imageFile ?? File('')),
+                        //               image: FileImage(imageFile ?? File('')),
                         //               fit: BoxFit.cover),
                         //       color: Colors.amber),
                         // ),

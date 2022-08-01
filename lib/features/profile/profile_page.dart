@@ -1,10 +1,11 @@
-import 'dart:developer';
+
 import 'dart:io';
 
 import 'package:blogapp/features/auth/view/login_page.dart';
 import 'package:blogapp/features/profile/logic/profile_cubit.dart';
 import 'package:blogapp/features/widget/textfield_widget.dart';
 import 'package:blogapp/models/user.dart';
+import 'package:blogapp/services/user_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             image: _imageFile == null
                                 // ignore: unnecessary_null_comparison
                                 ?DecorationImage(
-                                        image: NetworkImage('${image}'),
+                                        image: NetworkImage('$image'),
                                         fit: BoxFit.cover)
                                    
                                 : DecorationImage(
@@ -79,11 +80,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     )),
                       TextButton(onPressed:  () {
-                  // logout().then((value) => {
-                  //       Navigator.of(context).pushAndRemoveUntil(
-                  //           MaterialPageRoute(builder: (context) => LoginPage()),
-                  //           (route) => false)
-                  //     });
+                  logout().then((value) => {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                            (route) => false)
+                      });
                 },child: Text('Deconnexion')),
                   TextFieldWidget(
                       nameController: txtNameController,

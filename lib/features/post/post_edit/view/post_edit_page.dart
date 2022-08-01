@@ -1,12 +1,17 @@
+import 'dart:developer';
 import 'dart:io';
 
+
 import 'package:blogapp/constant.dart';
+import 'package:blogapp/features/home/home_menu.dart';
 import 'package:blogapp/features/post/post_edit/logic/post_edit_cubit.dart';
-import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
+
+import 'package:blogapp/features/widget/html_editor.dart';
 import 'package:blogapp/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 
 class PostEditPage extends StatefulWidget {
   const PostEditPage({Key? key, required this.post, required this.btnTitle})
@@ -21,7 +26,9 @@ class _PostEditPageState extends State<PostEditPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
   final TextEditingController _txtControllerTitle = TextEditingController();
-  bool _loading = false;
+
+  HtmlEditorController controller = HtmlEditorController();
+ 
   File? _imageFile;
   final _picker = ImagePicker();
   String message = '';
@@ -38,7 +45,7 @@ class _PostEditPageState extends State<PostEditPage> {
   @override
   void initState() {
     if (widget.post != null) {
-      _txtControllerTitle.text=widget.post!.title??'';
+      _txtControllerTitle.text = widget.post!.title ?? '';
       _txtControllerBody.text = widget.post!.description ?? '';
     }
     super.initState();
@@ -48,13 +55,20 @@ class _PostEditPageState extends State<PostEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Editeur',
+          style: TextStyle(color: Colors.black),
+        ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_sharp,
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomeMenu()),
+                (route) => false);
           },
         ),
         backgroundColor: Colors.white,
@@ -69,146 +83,180 @@ class _PostEditPageState extends State<PostEditPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextFormField(
-                        controller: _txtControllerTitle,
-                        keyboardType: TextInputType.multiline,
-                        minLines: 1, //Normal textInputField will be displayed
+                    _buildTextfieldTitle(),
+                    // Padding(
+                    //   padding: EdgeInsets.all(8),
+                    //   child: TextFormField(
+                    //     controller: _txtControllerBody,
+                    //     keyboardType: TextInputType.multiline,
+                    //     minLines: 1, //Normal textInputField will be displayed
 
-                        maxLines: 9,
-                        validator: (val) => val!.isEmpty ? 'Champ requit' : null,
-                        decoration: InputDecoration(
-                            hintText: "Titre de la publication ...",
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                                    enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                                    ),
-                                    
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextFormField(
-                        controller: _txtControllerBody,
-                        keyboardType: TextInputType.multiline,
-                        minLines: 1, //Normal textInputField will be displayed
+                    //     maxLines: 9,
+                    //     validator: (val) =>
+                    //         val!.isEmpty ? 'Champ requit' : null,
+                    //     decoration: InputDecoration(
+                    //       hintText: "Description de la publication ...",
+                    //       focusedBorder: OutlineInputBorder(
+                    //           borderSide:
+                    //               BorderSide(width: 0, color: Colors.white)),
+                    //       border: OutlineInputBorder(
+                    //           borderSide:
+                    //               BorderSide(width: 0, color: Colors.white)),
+                    //       enabledBorder: OutlineInputBorder(
+                    //           borderSide:
+                    //               BorderSide(width: 0, color: Colors.white)),
+                    //     ),
+                    //   ),
+                    // ),
+                    widget.post != null
+                        ? SizedBox()
+                        : _buildImage(context),
+                    widget.post != null
+                        ? SizedBox()
+                        : _buildBtnAddImage(),
 
-                        maxLines: 9,
-                        validator: (val) => val!.isEmpty ? 'Champ requit' : null,
-                        decoration: InputDecoration(
-                            hintText: "Description de la publication ...",
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                                    enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white)),
-                                    ),
-                                    
-                      ),
-                    ),
+                    htmlEditor(controller: controller),
                   ],
                 ),
               ),
-              widget.post != null
-                  ? SizedBox()
-                  : Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: _imageFile == null ? 40 :  MediaQuery.of(context).size.height * 0.5,
-                      decoration: BoxDecoration(
-                          image: _imageFile == null
-                              ? null
-                              : DecorationImage(
-                                  image: FileImage(_imageFile ?? File('')),
-                                  fit: BoxFit.cover)),
-                    ),
-            widget.post != null
-                  ? SizedBox()
-                  :    Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.image, size: 30, color: Colors.black38),
-                    onPressed: () {
-                      getImage();
-                    },
-                  ),Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text('photos'),
-                  )
-                ],
-              ),
-              BlocConsumer<PostEditCubit, PostEditState>(
-                  listener: (context, state) {
-                print(state.toString());
-                if (state is PostEditStateSucces) {
-                  print('ok');
-                      context.read<PostCubit>().postFetch();
-                  return Navigator.pop(context);
-                }
-                if (state is PostEditStateFailed) {
-                  print('ok');
-                      context.read<PostCubit>().postFetch();
-                  return Navigator.pop(context);
-                }
-              }, builder: (context, state) {
-                if (state is PostEditStateLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (state is PostEditStateSucces) {
-                  message = state.message;
-                  print(message.toString());
-                }
-                if (state is PostEditStateFailed) {
-                  message = state.message;
-                  print(message.toString());
-                }
-                if (state is PostEditStateError) {
-                  message = state.message;
-                  print(message.toString());
-                }
-                return Center(
-                  child:Container()
-                  //  Text(
-                  //   message,
-                  //   style: TextStyle(color: Colors.black),
-                  // ),
-                );
-              }),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: kTextButton(widget.btnTitle, () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      _loading = !_loading;
-                    });
-                    if (widget.post == null) {
-                      // _createPost();
-                      context
-                          .read<PostEditCubit>()
-                          .createPost(_txtControllerTitle.text,_txtControllerBody.text, _imageFile);
-                    } else {
-                      context.read<PostEditCubit>().editPost(
-                          widget.post!.id ?? 0,_txtControllerTitle.text, _txtControllerBody.text);
-                      // _editPost(widget.post!.id ?? 0);
-                    }
-                  }
-                }),
-              )
+              _buildBlocOfBtnValidate(),
+              _buildBtnValidate(context)
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextfieldTitle() {
+    return Padding(
+                    padding: EdgeInsets.all(8),
+                    child: TextFormField(
+                      controller: _txtControllerTitle,
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1, //Normal textInputField will be displayed
+
+                      maxLines: 9,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Champ requit' : null,
+                      decoration: InputDecoration(
+                        hintText: "Titre de la publication ...",
+                        focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 0, color: Colors.white)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 0, color: Colors.white)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 0, color: Colors.white)),
+                      ),
+                    ),
+                  );
+  }
+
+  Widget _buildBtnAddImage() {
+    return GestureDetector(
+                          onTap: () {
+                            getImage();
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Icon(
+                                      _imageFile == null
+                                          ? Icons.add_a_photo
+                                          : Icons.edit,
+                                      size: 25,
+                                      color: Colors.green)),
+                              Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(
+                                  _imageFile == null
+                                      ? 'ajoutez une photos de decouverture'
+                                      : 'modifier la photo de decouverture',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: _imageFile == null ? 40 : 200,
+                          decoration: BoxDecoration(
+                              image: _imageFile == null
+                                  ? null
+                                  : DecorationImage(
+                                      image:
+                                          FileImage(_imageFile ?? File('')),
+                                      fit: BoxFit.cover)),
+                        );
+  }
+
+  BlocConsumer<PostEditCubit, PostEditState> _buildBlocOfBtnValidate() {
+    return BlocConsumer<PostEditCubit, PostEditState>(
+        listener: (context, state) {
+      print(state.toString());
+      if (state is PostEditStateSucces) {
+        print('ok');
+        // context.read<PostCubit>().postFetch();
+        //      Navigator.of(context).pushAndRemoveUntil(
+        // MaterialPageRoute(builder: (context) => HomeMenu()),
+        // (route) => false);
+      }
+      if (state is PostEditStateFailed) {
+        print('ok');
+        // context.read<PostCubit>().postFetch();
+        //      Navigator.of(context).pushAndRemoveUntil(
+        // MaterialPageRoute(builder: (context) => HomeMenu()),
+        // (route) => false);
+      }
+    }, builder: (context, state) {
+      if (state is PostEditStateLoading) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (state is PostEditStateSucces) {
+        message = state.message;
+        print(message.toString());
+      }
+      if (state is PostEditStateFailed) {
+        message = state.message;
+        print(message.toString());
+      }
+      if (state is PostEditStateError) {
+        message = state.message;
+        print(message.toString());
+      }
+      return Center(child: Container());
+    });
+  }
+
+  Widget _buildBtnValidate(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: kTextButton(widget.btnTitle, () async {
+        if (_formKey.currentState!.validate()) {
+          if (widget.post == null) {
+            String txt = await controller.getText();
+            // _createPost();
+            log(txt);
+            context
+                .read<PostEditCubit>()
+                .createPost(_txtControllerTitle.text, 'txt', _imageFile);
+          } else {
+            String txt = await controller.getText();
+            context
+                .read<PostEditCubit>()
+                .editPost(widget.post!.id ?? 0, _txtControllerTitle.text, txt);
+          }
+        }
+      }),
     );
   }
 }

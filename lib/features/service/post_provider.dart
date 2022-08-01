@@ -14,7 +14,7 @@ Future<ApiResponse> getPostsLimit() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.get(Uri.parse(postLimitUrl),
+    final response = await http.post(Uri.parse(postLimitUrl),
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'

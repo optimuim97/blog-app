@@ -1,15 +1,12 @@
 import 'dart:developer';
-import 'dart:ui';
 
-import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/auth/logic/auth_cubit_cubit.dart';
 import 'package:blogapp/features/auth/view/registrer_page.dart';
 import 'package:blogapp/features/home/home_menu.dart';
-import 'package:blogapp/features/post/post_page/post_page.dart';
+
 import 'package:blogapp/features/widget/textfield_widget.dart';
 import 'package:blogapp/models/user.dart';
-import 'package:blogapp/screens/home.dart';
-import 'package:blogapp/screens/register.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   bool loading = false;
   void _saveAndRedirectToHome(User user) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    log('ddde'+user.token.toString());
     await pref.setString('token', user.token ?? '');
     await pref.setInt('userId', user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
@@ -40,19 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.white,
-        //   elevation: 0,
-        //   leading: IconButton(
-        //     icon: const Icon(
-        //       Icons.arrow_back,
-        //       color: Colors.black,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        // ),
+ 
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -101,8 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                     }
 
                     return Center(
-                        child: Text(
-                      s.toString(),
+                        // ignore: unnecessary_null_comparison
+                        child: Text( s!=null ?
+                      s.toString():'',
                       style: TextStyle(color: Colors.black),
                     ));
                   },

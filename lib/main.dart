@@ -34,7 +34,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
           // fontFamily: 'Aclonica',
           primaryColor: Colors.blue,
-          accentColor: Colors.white),
+         ),
       debugShowCheckedModeBanner: false,
       home: Loading(),
     );

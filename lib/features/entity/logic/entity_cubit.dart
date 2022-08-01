@@ -4,8 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/service/entity_provider.dart';
 import 'package:blogapp/models/api_response.dart';
-import 'package:blogapp/models/entity_model.dart';
-import 'package:blogapp/screens/entity_screen.dart';
+
 import 'package:meta/meta.dart';
 
 part 'entity_state.dart';

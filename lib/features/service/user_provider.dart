@@ -29,13 +29,16 @@ class UserApiProvider {
 Future<ApiResponse> login(String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
   try {
+  
     final response = await http.post(Uri.parse(loginURL),
         headers: {'Accept': 'application/json'},
         body: {'email': email, 'password': password});
-
+  // log(jsonDecode(response.body)['data'].toString());
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
+     
+        apiResponse.data = User.fromJson(jsonDecode(response.body)['data']);
+     
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -67,6 +70,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
       'password': password,
       'password_confirmation': password
     });
+   
 
     switch (response.statusCode) {
       case 200:

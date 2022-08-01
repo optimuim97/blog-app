@@ -4,8 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/service/post_provider.dart';
 import 'package:blogapp/models/api_response.dart';
-import 'package:blogapp/screens/login.dart';
-import 'package:blogapp/services/user_service.dart';
+
 import 'package:meta/meta.dart';
 
 part 'post_state.dart';
