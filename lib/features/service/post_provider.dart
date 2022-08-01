@@ -10,6 +10,35 @@ import 'package:http/http.dart' as http;
 class PostApiProvider {
 
 
+Future<ApiResponse> getPostsLimit() async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.get(Uri.parse(postLimitUrl),
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+ log('bbb'+response.body.toString());
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
+        // we get list of posts, so we need to map each item to post model
+        apiResponse.data as List<dynamic>;
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }
+  catch (e){
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
 // get all posts
 Future<ApiResponse> getPosts() async {
   ApiResponse apiResponse = ApiResponse();
@@ -43,8 +72,9 @@ Future<ApiResponse> getPosts() async {
 
 
 // Create post
-Future<ApiResponse> createPost(String body, String? image) async {
+Future<ApiResponse> createPost(String title,String body, String? image) async {
   ApiResponse apiResponse = ApiResponse();
+  // log(image!);
   try {
     String token = await getToken();
     final response = await http.post(Uri.parse(postsURL),
@@ -52,10 +82,13 @@ Future<ApiResponse> createPost(String body, String? image) async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: image !=null ? {
-      'body': body,
-      'image': image
+      'title': title,
+       'description':body,
+      'cover': image
     } : {
-      'body': body
+      'title': title,
+      'description':body
+     
     });
 
     // here if the image is null we just send the body, if not null we send the image too
@@ -86,7 +119,7 @@ Future<ApiResponse> createPost(String body, String? image) async {
 
 
 // Edit post
-Future<ApiResponse> editPost(int postId, String body) async {
+Future<ApiResponse> editPost(int postId,String title, String body) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -95,7 +128,8 @@ Future<ApiResponse> editPost(int postId, String body) async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: {
-      'body': body
+      'title':title,
+      'description': body
     });
 
     switch(response.statusCode){
@@ -167,6 +201,37 @@ Future<ApiResponse> likeUnlikePost(int postId) async {
     switch(response.statusCode){
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }
+  catch (e){
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+// get all posts
+Future<ApiResponse> getPostsByEntity(int entity) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.post(Uri.parse(postsURL+'/$entity/entity'),
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+ log('bbb'+response.body.toString());
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
+        // we get list of posts, so we need to map each item to post model
+        apiResponse.data as List<dynamic>;
         break;
       case 401:
         apiResponse.error = unauthorized;

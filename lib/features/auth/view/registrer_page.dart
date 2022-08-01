@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             passwordController.text);
                       },
                       child: const Text(
-                        'Se connecter',
+                        'Valider',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

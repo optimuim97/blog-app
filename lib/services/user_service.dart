@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:blogapp/constant.dart';
@@ -71,25 +72,40 @@ Future<ApiResponse> register(String name, String email, String password) async {
 // User
 Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
-  try {
+  
     String token = await getToken();
+    
+    log(token);
     final response = await http.get(Uri.parse(userURL), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
+    log(response.body.toString());
+    log(response.statusCode.toString());
 
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
-    }
-  } catch (e) {
+if(response.statusCode.toInt()==200){
+   apiResponse.data = User.fromJson(jsonDecode(response.body));
+        log('ok');
+        log(apiResponse.data.toString());
+}else{
+  log('message');
+
+
+    // switch (response.statusCode) {
+    //   case 200:
+    //     apiResponse.data = User.fromJson(jsonDecode(response.body));
+    //     log('ok');
+    //     log(apiResponse.data.toString());
+    //     break;
+    //   case 401:
+    //     apiResponse.error = unauthorized;
+    //     break;
+    //   default:
+    //     apiResponse.error = somethingWentWrong;
+    //     break;
+    // }
+
+  
     apiResponse.error = serverError;
   }
   return apiResponse;

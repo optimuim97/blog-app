@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:blogapp/models/api_response.dart';
@@ -34,7 +35,9 @@ class _ProfileState extends State<Profile> {
   // get user detail
   void getUser() async {
     ApiResponse response = await getUserDetail();
-    if (response.error == null) {
+    log(response.data.toString());
+    log(response.error.toString());
+    if (response.error == null) { 
       setState(() {
         user = response.data as User;
         loading = false;
@@ -52,27 +55,27 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  //update profile
-  void updateProfile() async {
-    ApiResponse response =
-        await updateUser(txtNameController.text, getStringImage(_imageFile));
-    setState(() {
-      loading = false;
-    });
-    if (response.error == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.data}')));
-    } else if (response.error == unauthorized) {
-      logout().then((value) => {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => Login()),
-                (route) => false)
-          });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
-    }
-  }
+  // //update profile
+  // void updateProfile() async {
+  //   ApiResponse response =
+  //       await updateUser(txtNameController.text, getStringImage(_imageFile));
+  //   setState(() {
+  //     loading = false;
+  //   });
+  //   if (response.error == null) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('${response.data}')));
+  //   } else if (response.error == unauthorized) {
+  //     logout().then((value) => {
+  //           Navigator.of(context).pushAndRemoveUntil(
+  //               MaterialPageRoute(builder: (context) => Login()),
+  //               (route) => false)
+  //         });
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('${response.error}')));
+  //   }
+  // }
 
   @override
   void initState() {
@@ -128,10 +131,10 @@ class _ProfileState extends State<Profile> {
                 ),
                 kTextButton('Mettre à jour ...', () {
                   if (formKey.currentState!.validate()) {
-                    setState(() {
-                      loading = true;
-                    });
-                    updateProfile();
+                    // setState(() {
+                    //   loading = true;
+                    // });
+                    // updateProfile();
                   }
                 })
               ],

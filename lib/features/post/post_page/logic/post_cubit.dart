@@ -23,6 +23,26 @@ class PostCubit extends Cubit<PostState> {
       emit(PostStateError(e.toString()));
     }
   }
+   Future getPostLimit() async {
+    emit(PostStateLoading()); 
+    try {
+      var result = await _apiProvider.getPostsLimit();
+      log(result.error .toString());
+      emit(PostStateLoadedLimit(result));
+    } catch (e) {
+      emit(PostStateError(e.toString()));
+    }
+  }
+  Future getPostsByEntity(int entity) async {
+    emit(PostStateLoading()); 
+    try {
+      var result = await _apiProvider.getPostsByEntity(entity);
+      log(result.error .toString());
+      emit(PostStateLoaded(result));
+    } catch (e) {
+      emit(PostStateError(e.toString()));
+    }
+  }
 
 Future handleDeletePost(int postId) async {
     ApiResponse response = await _apiProvider.deletePost(postId);

@@ -1,3 +1,4 @@
+import 'package:blogapp/features/entity/view/entity_page.dart';
 import 'package:blogapp/features/post/post_edit/view/post_edit_page.dart';
 import 'package:blogapp/features/post/post_page/post_page.dart';
 import 'package:blogapp/features/profile/profile_page.dart';
@@ -14,7 +15,7 @@ class HomeMenu extends StatefulWidget {
 
 class _HomeMenuState extends State<HomeMenu> {
   final Widget _screen1 = const HomePostPage();
-  final Widget _screen2 = const HomePostPage();
+  final Widget _screen2 = const EntityPage();
   // final Widget _screen3 = const PostEditPage(
   //   btnTitle: 'Poster',
   //   post: null,

@@ -1,16 +1,16 @@
 // ----- STRINGS ------
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 // const baseURL = 'http://192.168.121.201:8000/api';
-const baseURL = 'http://192.168.1.68:8000/api';
+const baseURL = 'http://192.168.1.74:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
+const entityUrl=baseURL +'/entities';
 const postsURL = baseURL + '/posts';
 const commentsURL = baseURL + '/comments';
-
+const postLimitUrl=baseURL+'/posts-limited';
 // ----- Errors -----
 const serverError = 'Erreur du serveur';
 const unauthorized = 'Non autorisé';
@@ -69,7 +69,7 @@ Widget kLikeAndComment(int value, Color color, Function onTap ,double width , Ic
         child: InkWell(
           onTap: () => onTap(),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.only(left: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -78,7 +78,7 @@ Widget kLikeAndComment(int value, Color color, Function onTap ,double width , Ic
 //                     color: color, semanticsLabel: 'A red up arrow'),
                 Icon(
                   icon,
-                  size: 22,
+                  size: 20,
                   color: color,
                 ),
                 SizedBox(width: 4),

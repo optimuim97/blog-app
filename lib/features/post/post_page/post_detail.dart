@@ -121,7 +121,7 @@ void _deleteComment(int commentId) async {
                       width: 10,
                     ),
                     Text(
-                      widget.post.likesCount!.toString() + ' commentaires',
+                      widget.post.commentsCount!.toString() + ' commentaires',
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
@@ -175,6 +175,7 @@ void _deleteComment(int commentId) async {
                     if (state is PostCommentStateSucces) {
                       _commentsList = state.comment.data as List<dynamic>;
                       userId = state.userId;
+                      log(userId.toString());
                     }
 
                     print(state.toString());

@@ -14,12 +14,12 @@ class PostEditCubit extends Cubit<PostEditState> {
 
   final PostApiProvider _apiProvider = PostApiProvider();
 
-  Future createPost(final String text, final File? _imageFile) async {
+  Future createPost(final title,final String text, final File? _imageFile) async {
     emit(PostEditStateLoading());
     String? image = _imageFile == null
         ? null
         : UserApiProvider().getStringImage(_imageFile);
-    ApiResponse response = await _apiProvider.createPost(text, image);
+    ApiResponse response = await _apiProvider.createPost(title,text, image);
 
     if (response.error == null) {
       emit(PostEditStateFailed('1'));
@@ -31,9 +31,9 @@ class PostEditCubit extends Cubit<PostEditState> {
   }
 
   // edit post
-  Future editPost(int postId, String text) async {
+  Future editPost(int postId,String title, String text) async {
     emit(PostEditStateLoading());
-    ApiResponse response = await _apiProvider.editPost(postId, text);
+    ApiResponse response = await _apiProvider.editPost(postId, title,text);
     if (response.error == null) {
       emit(PostEditStateFailed('1'));
     } else if (response.error == unauthorized) {

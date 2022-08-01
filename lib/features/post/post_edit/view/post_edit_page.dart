@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/post/post_edit/logic/post_edit_cubit.dart';
+import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
 import 'package:blogapp/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ class PostEditPage extends StatefulWidget {
 class _PostEditPageState extends State<PostEditPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
+  final TextEditingController _txtControllerTitle = TextEditingController();
   bool _loading = false;
   File? _imageFile;
   final _picker = ImagePicker();
@@ -36,6 +38,7 @@ class _PostEditPageState extends State<PostEditPage> {
   @override
   void initState() {
     if (widget.post != null) {
+      _txtControllerTitle.text=widget.post!.title??'';
       _txtControllerBody.text = widget.post!.description ?? '';
     }
     super.initState();
@@ -64,29 +67,57 @@ class _PostEditPageState extends State<PostEditPage> {
             children: [
               Form(
                 key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: TextFormField(
-                    controller: _txtControllerBody,
-                    keyboardType: TextInputType.multiline,
-                    minLines: 1, //Normal textInputField will be displayed
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextFormField(
+                        controller: _txtControllerTitle,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1, //Normal textInputField will be displayed
 
-                    maxLines: 9,
-                    validator: (val) => val!.isEmpty ? 'Champ requit' : null,
-                    decoration: InputDecoration(
-                        hintText: "Description de la publication ...",
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 0, color: Colors.white)),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 0, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 0, color: Colors.white)),
-                                ),
-                                
-                  ),
+                        maxLines: 9,
+                        validator: (val) => val!.isEmpty ? 'Champ requit' : null,
+                        decoration: InputDecoration(
+                            hintText: "Titre de la publication ...",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                                    enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                                    ),
+                                    
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextFormField(
+                        controller: _txtControllerBody,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1, //Normal textInputField will be displayed
+
+                        maxLines: 9,
+                        validator: (val) => val!.isEmpty ? 'Champ requit' : null,
+                        decoration: InputDecoration(
+                            hintText: "Description de la publication ...",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                                    enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white)),
+                                    ),
+                                    
+                      ),
+                    ),
+                  ],
                 ),
               ),
               widget.post != null
@@ -122,10 +153,12 @@ class _PostEditPageState extends State<PostEditPage> {
                 print(state.toString());
                 if (state is PostEditStateSucces) {
                   print('ok');
+                      context.read<PostCubit>().postFetch();
                   return Navigator.pop(context);
                 }
                 if (state is PostEditStateFailed) {
                   print('ok');
+                      context.read<PostCubit>().postFetch();
                   return Navigator.pop(context);
                 }
               }, builder: (context, state) {
@@ -163,10 +196,10 @@ class _PostEditPageState extends State<PostEditPage> {
                       // _createPost();
                       context
                           .read<PostEditCubit>()
-                          .createPost(_txtControllerBody.text, _imageFile);
+                          .createPost(_txtControllerTitle.text,_txtControllerBody.text, _imageFile);
                     } else {
                       context.read<PostEditCubit>().editPost(
-                          widget.post!.id ?? 0, _txtControllerBody.text);
+                          widget.post!.id ?? 0,_txtControllerTitle.text, _txtControllerBody.text);
                       // _editPost(widget.post!.id ?? 0);
                     }
                   }

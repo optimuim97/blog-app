@@ -3,23 +3,24 @@ import 'user.dart';
 class Post {
   int? id;
   int? userId;
-  String? title;
-  String? description;
-  String? publisherName;
+  String? title='';
+  String? description='';
+  String? publisherName='';
   int? publisherId;
   bool? isPublish;
   bool? isVisibleByUser;
   bool? isVisibleByAgent;
-  String? expirationDate;
-  String? medias;
-  String? cover;
+  String? expirationDate='';
+  String? medias='';
+  String? cover='';
   bool? isDraft;
   int? entityId;
-  String? createdAt;
-  String? updatedAt;
-  String? deletedAt;
+  String? createdAt='';
+  String? updatedAt='';
+  String? deletedAt='';
 int ? likesCount;
             int ? commentsCount ;
+            String? publisherImage;
 
   Post(
       {this.id,
@@ -39,28 +40,29 @@ int ? likesCount;
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
-      this.commentsCount,this.likesCount});
+      this.commentsCount,this.likesCount,this.publisherImage});
 
   Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
-    title = json['title'];
-    description = json['description'];
-    publisherName = json['publisher_name'];
+    title = json['title']??'';
+    description = json['description']??'';
+    publisherName = json['publisher_name']??'';
     publisherId = json['publisher_id'];
     isPublish = json['is_publish'];
     isVisibleByUser = json['is_visible_by_user'];
     isVisibleByAgent = json['is_visible_by_agent'];
     expirationDate = json['expiration_date'];
-    medias = json['medias'];
-    cover = json['cover'];
+    medias = json['medias']??'';
+    cover = json['cover']??'';
     isDraft = json['is_draft'];
     entityId = json['entity_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
+    createdAt = json['created_at']??'';
+    updatedAt = json['updated_at']??'';
+    deletedAt = json['deleted_at']??'';
     commentsCount=json['comments_count'];
     likesCount=json['likes_count'];
+    publisherImage=json['user_image']??'';
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +84,7 @@ int ? likesCount;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;
+    data['user_image']=this.publisherImage;
     return data;
   }
 }

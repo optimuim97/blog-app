@@ -15,6 +15,11 @@ class PostStateLoaded extends PostState {
   PostStateLoaded(this.post);
   List<Object?> get props => [post];
 }
+class PostStateLoadedLimit extends PostState {
+  final ApiResponse  post;
+  PostStateLoadedLimit(this.post);
+  List<Object?> get props => [post];
+}
 
 class PostStateError extends PostState {
   final String error;

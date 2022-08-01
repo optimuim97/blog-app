@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:blogapp/constant.dart';
+import 'package:blogapp/features/entity/logic/entity_cubit.dart';
 import 'package:blogapp/features/post/post_comment/view/post_comment_page.dart';
 import 'package:blogapp/features/post/post_edit/view/post_edit_page.dart';
 import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
 import 'package:blogapp/features/post/post_page/post_detail.dart';
+import 'package:blogapp/models/entity_model.dart';
 import 'package:blogapp/models/post.dart';
 import 'package:blogapp/screens/comment_screen.dart';
 import 'package:blogapp/screens/post_form.dart';
@@ -22,12 +24,16 @@ class HomePostPage extends StatefulWidget {
 }
 
 class _HomePostPageState extends State<HomePostPage> {
-   int _current = 0;
+  int _current = 0;
   final CarouselController _controller = CarouselController();
   List<dynamic> _postList = [];
+  List<dynamic> _postListLimit = [];
+  List<dynamic> _entityList = [];
   @override
   void initState() {
     context.read<PostCubit>().postFetch();
+    context.read<PostCubit>().getPostLimit();
+    context.read<EntityCubit>().getEntity();
     super.initState();
   }
 
@@ -46,21 +52,22 @@ class _HomePostPageState extends State<HomePostPage> {
           height: 20,
         ),
         BlocBuilder<PostCubit, PostState>(builder: (context, state) {
-          log(state.toString());
+          // log(state.toString());
 
-          if (state is PostStateLoaded) {
+          if (state is PostStateLoadedLimit) {
             if (state.post.error == null) {
-              _postList = state.post.data as List<dynamic>;
-              log('zzze' + _postList.toString());
+              _postListLimit = state.post.data as List<dynamic>;
+              log('zzze' + _postListLimit.toString());
               // _loading = _loading ? !_loading : _loading;
 
             }
           }
           return CarouselSlider(
-             carouselController: _controller,
+            carouselController: _controller,
             options: CarouselOptions(
-              viewportFraction : 0.8,
-                autoPlay: true,
+                height: 200.0,
+                viewportFraction: 0.8,
+                autoPlay: false,
                 enlargeCenterPage: true,
                 aspectRatio: 2.0,
                 onPageChanged: (index, reason) {
@@ -68,11 +75,11 @@ class _HomePostPageState extends State<HomePostPage> {
                     _current = index;
                   });
                 }),
-          
+
             // options: CarouselOptions(
             //   height: 300.0,
             //   enlargeCenterPage: true,
-              
+
             //   onPageChanged: (position, reason) {
             //     print(reason);
             //     print(CarouselPageChangedReason.controller);
@@ -84,7 +91,7 @@ class _HomePostPageState extends State<HomePostPage> {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    padding: EdgeInsets.only(left:20,right: 20,top:120),
+                    padding: EdgeInsets.only(left: 20, right: 20, top: 50),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -98,26 +105,34 @@ class _HomePostPageState extends State<HomePostPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         Text(
-                                        '' +
-                                            posts.title.toString().toLowerCase(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize: 25),
-                                      ),SizedBox(height: 10,),
-                                      Container(padding: EdgeInsets.all(5),
-                                         decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Colors.blue,),
-                                        child: TextButton(onPressed: (){}, child:  Text(
-                                          'Lire maintenant' ,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        ),),
-                                      )
+                        Text(
+                          '' + posts.title.toString().toLowerCase(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: Colors.blue,
+                          ),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Lire maintenant',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 16),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   );
@@ -126,49 +141,111 @@ class _HomePostPageState extends State<HomePostPage> {
             }).toList(),
           );
         }),
-         SizedBox(
-          height: 20,
+        SizedBox(
+          height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'Entité',
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: ListTile(
+            contentPadding: EdgeInsets.all(0),
+            trailing: TextButton(
+              onPressed: () {},
+              child: Text(
+                'voir plus',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+            ),
+            title: Text(
+              'Entité',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 5,
         ),
-        SizedBox(
-          height: 70,
-          child: ListView.builder(
-              itemCount: 5,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(color: Colors.blue, width: 1),
-                        color: Colors.white),
-                    child: Center(
-                        child: Text(
-                      'entité',
-                      style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold),
-                    )),
-                  ),
-                );
-              }),
+        BlocBuilder<EntityCubit, EntityState>(
+          builder: (context, state) {
+            log(state.toString());
+            if (state is EntityStateLoaded) {
+              log('+++++++++++' + state.post.data.toString());
+              _entityList = state.post.data as List<dynamic>;
+            }
+            return SizedBox(
+              height: 50,
+              child: ListView.builder(
+                  itemCount: _entityList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    EntityModel entity = _entityList[index];
+                    return Row(
+                      children: [
+                        index == 0
+                            ? Container(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: Container(
+                                  width: 150,
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      border: Border.all(
+                                          color: Colors.blue, width: 1),
+                                      color: Colors.white),
+                                  child: Center(
+                                      child: TextButton(
+                                    onPressed: () {
+                                      context.read<PostCubit>().postFetch();
+                                    },
+                                    child: Text(
+                                      'Tous',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
+                                ),
+                              )
+                            : Container(),
+                        Container(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Container(
+                            width: 170,
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                border:
+                                    Border.all(color: Colors.blue, width: 1),
+                                color: Colors.white),
+                            child: Center(
+                                child: TextButton(
+                              onPressed: () {
+                                context
+                                    .read<PostCubit>()
+                                    .getPostsByEntity(entity.id!.toInt());
+                              },
+                              child: Text(
+                                entity.name.toString(),
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+            );
+          },
         ),
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
           child: Text(
             'Actualité',
             style: TextStyle(
@@ -188,11 +265,10 @@ class _HomePostPageState extends State<HomePostPage> {
               }
             }
             return SizedBox(
-                height:  MediaQuery.of(context).size.height *
-                                        0.25 * _postList.length,
-
+                height:
+                    MediaQuery.of(context).size.height * 0.3 * _postList.length,
                 child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: _postList.length,
                     itemBuilder: (BuildContext context, int index) {
                       Post post = _postList[index];
@@ -207,6 +283,7 @@ class _HomePostPageState extends State<HomePostPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Container(
+                            height: 200,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
@@ -215,58 +292,69 @@ class _HomePostPageState extends State<HomePostPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CachedNetworkImage(
-                                  imageUrl: post.cover.toString(),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    // padding: EdgeInsets.all(10),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10)),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  placeholder: (context, url) => Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    // padding: EdgeInsets.all(10),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10)),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
+                                post.cover!.isNotEmpty
+                                    ? CachedNetworkImage(
+                                        imageUrl: post.cover!,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          height: 200,
+                                          // padding: EdgeInsets.all(10),
+                                          // height: MediaQuery.of(context).size.height *
+                                          //     0.2,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                bottomLeft:
+                                                    Radius.circular(10)),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) =>
+                                            Container(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
                                               0.35,
                                           // padding: EdgeInsets.all(10),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.2,
-                                          child: Center(
-                                              child: const Icon(Icons.error)),
+                                          height: 200,
                                           decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(10)))),
-                                ),
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                bottomLeft:
+                                                    Radius.circular(10)),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                                // padding: EdgeInsets.all(10),
+                                                height: 200,
+                                                child: Center(
+                                                    child: const Icon(
+                                                        Icons.error)),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    10)))),
+                                      )
+                                    : Container(),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -284,49 +372,50 @@ class _HomePostPageState extends State<HomePostPage> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
-                                            fontSize: 20),
+                                            fontSize: 18),
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      Text(
-                                        post.description!.substring(0, 40) +
-                                            '/n' +
-                                            post.publisherName
-                                                .toString()
-                                                .toLowerCase(),
-                                        style: TextStyle(
-                                            // fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 15),
-                                      ),
+                                        ListTile(
+                                        leading: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              image: post.publisherImage != null
+                                                  ? DecorationImage(
+                                                      image: NetworkImage(
+                                                          '${post.publisherImage}'),
+                                                      fit: BoxFit.cover)
+                                                  : null,
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              color: Colors.blue),
+                                          child:  post.publisherImage != null
+                                              ? SizedBox()
+                                              : Center(
+                                                  child: Text(
+                                                    post.publisherName!.length >1 ?
+                                                         post.publisherName.toString()
+                                                        .substring(0, 1):'',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontSize: 20),
+                                                  ),
+                                                ),
+                                        ),
+                                        contentPadding: EdgeInsets.all(0),
+                                        ),
+                                      
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            right: 20, top: 15, bottom: 10),
+                                            right: 5, top: 15, bottom: 10),
                                         child: Row(
                                           children: [
-                                            Container(
-                                              padding: EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(40),
-                                                  border: Border.all(
-                                                      color: Colors.blue,
-                                                      width: 1),
-                                                  color: Colors.white),
-                                              child: Center(
-                                                  child: Text(
-                                                post.publisherName
-                                                    .toString()
-                                                    .toLowerCase(),
-                                                style: TextStyle(
-                                                    // fontWeight: FontWeight.bold,
-                                                    color: Colors.blue,
-                                                    fontSize: 15),
-                                              )),
-                                            ),
                                             SizedBox(
-                                              width: 10,
+                                              width: 5,
                                             ),
                                             kLikeAndComment(
                                               post.likesCount!,
@@ -367,6 +456,7 @@ class _HomePostPageState extends State<HomePostPage> {
                                           ],
                                         ),
                                       ),
+                                    
                                     ],
                                   ),
                                 ))
