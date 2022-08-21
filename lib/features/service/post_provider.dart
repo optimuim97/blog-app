@@ -49,13 +49,14 @@ Future<ApiResponse> getPosts() async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
- log('bbb'+response.body.toString());
+ log(response.body.toString());
+ print(json.decode(response.body));
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['data'].map((p) => Post.fromJson(p)).toList();
+      print((json.decode(response.body)['data'] as List).length);
+         apiResponse.data  = (json.decode(response.body)['data'] as List).map((p) => Post.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
-        apiResponse.data as List<dynamic>;
-        break;
+        return apiResponse;
       case 401:
         apiResponse.error = unauthorized;
         break;

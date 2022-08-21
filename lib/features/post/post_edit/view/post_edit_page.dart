@@ -45,8 +45,8 @@ class _PostEditPageState extends State<PostEditPage> {
   @override
   void initState() {
     if (widget.post != null) {
-      _txtControllerTitle.text = widget.post!.title ?? '';
-      _txtControllerBody.text = widget.post!.description ?? '';
+      _txtControllerTitle.text = widget.post?.title ?? '';
+      _txtControllerBody.text = widget.post?.description ?? '';
     }
     super.initState();
   }
@@ -253,7 +253,7 @@ class _PostEditPageState extends State<PostEditPage> {
             String txt = await controller.getText();
             context
                 .read<PostEditCubit>()
-                .editPost(widget.post!.id ?? 0, _txtControllerTitle.text, txt);
+                .editPost(widget.post?.id ?? 0, _txtControllerTitle.text, txt);
           }
         }
       }),

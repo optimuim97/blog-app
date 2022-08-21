@@ -18,8 +18,8 @@ void main() {
       BlocProvider(
         create: (context) => PostCubit(),
       ),
-        BlocProvider(create: (context)=>EntityCubit()),
-      BlocProvider(create: (context)=>ProfileCubit()),
+      BlocProvider(create: (context) => EntityCubit()),
+      BlocProvider(create: (context) => ProfileCubit()),
       BlocProvider(create: (context) => PostEditCubit()),
       BlocProvider(create: (context) => PostCommentCubit())
     ],
@@ -32,9 +32,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          // fontFamily: 'Aclonica',
-          primaryColor: Colors.blue,
-         ),
+        // fontFamily: 'Aclonica',
+        primaryColor: Colors.blue,
+      ),
       debugShowCheckedModeBanner: false,
       home: Loading(),
     );

@@ -13,7 +13,7 @@ class PostImageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-             imageUrl: post.cover!,
+             imageUrl: post.cover,
              imageBuilder:
                  (context, imageProvider) =>
                      Container(

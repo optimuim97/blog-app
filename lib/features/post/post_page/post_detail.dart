@@ -30,7 +30,7 @@ class _PostDetailState extends State<PostDetail> {
 
   @override
   void initState() {
-    context.read<PostCommentCubit>().getComments(widget.post.id!);
+    context.read<PostCommentCubit>().getComments(widget.post.id);
     super.initState();
   }
 
@@ -66,7 +66,7 @@ class _PostDetailState extends State<PostDetail> {
                   height: 20,
                 ),
                 Text(
-                  widget.post.title!,
+                  widget.post.title,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class _PostDetailState extends State<PostDetail> {
                     // _deleteComment( comment.id??0);
                     context
                         .read<PostCommentCubit>()
-                        .getComments(widget.post.id!);
+                        .getComments(widget.post.id);
                     // _deleteComment(comment.id ?? 0);
                   }
                 },
@@ -221,14 +221,14 @@ class _PostDetailState extends State<PostDetail> {
                 context
                     .read<PostCommentCubit>()
                     .editComment(_editCommentId, _txtCommentController.text);
-                context.read<PostCommentCubit>().getComments(widget.post.id!);
+                context.read<PostCommentCubit>().getComments(widget.post.id);
                 _txtCommentController.text = '';
               } else {
                 context
                     .read<PostCommentCubit>()
-                    .createComment(widget.post.id!, _txtCommentController.text);
+                    .createComment(widget.post.id, _txtCommentController.text);
 
-                context.read<PostCommentCubit>().getComments(widget.post.id!);
+                context.read<PostCommentCubit>().getComments(widget.post.id);
                 _txtCommentController.text = '';
                 // _createComment();
               }
@@ -247,7 +247,7 @@ class _PostDetailState extends State<PostDetail> {
           color: Colors.blue,
         ),
         Text(
-          widget.post.likesCount!.toString() + ' jaimes',
+          widget.post.likesCount.toString() + ' jaimes',
           style: TextStyle(
               color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 13),
         ),
@@ -255,7 +255,7 @@ class _PostDetailState extends State<PostDetail> {
           width: 10,
         ),
         Text(
-          widget.post.commentsCount!.toString() + ' commentaires',
+          widget.post.commentsCount.toString() + ' commentaires',
           style: TextStyle(
               color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 13),
         ),
@@ -268,18 +268,17 @@ class _PostDetailState extends State<PostDetail> {
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-          image: widget.post.publisherImage != null
+          image: widget.post.cover.isEmpty
               ? DecorationImage(
-                  image: NetworkImage('${widget.post.publisherImage}'),
-                  fit: BoxFit.cover)
+                  image: NetworkImage('${widget.post.cover.isEmpty}'),               fit: BoxFit.cover)
               : null,
           borderRadius: BorderRadius.circular(25),
           color: Colors.blue),
-      child: widget.post.publisherImage != null
+      child: widget.post.cover.isEmpty
           ? SizedBox()
           : Center(
               child: Text(
-                widget.post.publisherName!.length > 1
+                widget.post.publisherName.length > 1
                     ? widget.post.publisherName.toString().substring(0, 1)
                     : '',
                 style: TextStyle(

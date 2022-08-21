@@ -120,20 +120,20 @@ class _PostListItemState extends State<PostListItem> {
                                       width: 35,
                                       height: 35,
                                       decoration: BoxDecoration(
-                                          image: post.publisherImage != null
+                                          image: post.cover.isEmpty
                                               ? DecorationImage(
                                                   image: NetworkImage(
-                                                      '${post.publisherImage}'),
+                                                      '${post.cover}'),
                                                   fit: BoxFit.cover)
                                               : null,
                                           borderRadius:
                                               BorderRadius.circular(25),
                                           color: Colors.blue),
-                                      child: post.publisherImage != null
+                                      child: post.cover.isEmpty
                                           ? SizedBox()
                                           : Center(
                                               child: Text(
-                                                post.publisherName!.length >
+                                                post.publisherName.length >
                                                         1
                                                     ? post.publisherName
                                                         .toString()
@@ -169,7 +169,7 @@ class _PostListItemState extends State<PostListItem> {
                                           width: 5,
                                         ),
                                         kLikeAndComment(
-                                          post.likesCount!,
+                                          post.likesCount,
 
                                           // 'heart-svgrepo-com.svg',
                                           Colors.blue,
@@ -177,7 +177,7 @@ class _PostListItemState extends State<PostListItem> {
                                             context
                                                 .read<PostCubit>()
                                                 .handlePostLikeDislike(
-                                                    post.id ?? 0);
+                                                    post.id);
                                             context
                                                 .read<PostCubit>()
                                                 .postFetch();
@@ -187,7 +187,7 @@ class _PostListItemState extends State<PostListItem> {
                                         ),
                                         
                                         kLikeAndComment(
-                                          post.commentsCount!,
+                                          post.commentsCount,
                                           Colors.blue,
                                           () {
                                     

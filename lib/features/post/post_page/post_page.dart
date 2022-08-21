@@ -181,20 +181,20 @@ class _HomePostPageState extends State<HomePostPage> {
                                       width: 35,
                                       height: 35,
                                       decoration: BoxDecoration(
-                                          image: post.publisherImage != null
+                                          image: post.cover.isEmpty
                                               ? DecorationImage(
                                                   image: NetworkImage(
-                                                      '${post.publisherImage}'),
-                                                  fit: BoxFit.cover)
+                                                      '${post.cover.isEmpty}'),
+                                               fit: BoxFit.cover)
                                               : null,
                                           borderRadius:
                                               BorderRadius.circular(25),
                                           color: Colors.blue),
-                                      child: post.publisherImage != null
+                                      child: post.cover.isEmpty
                                           ? SizedBox()
                                           : Center(
                                               child: Text(
-                                                post.publisherName!.length >
+                                                post.publisherName.length >
                                                         1
                                                     ? post.publisherName
                                                         .toString()
@@ -230,7 +230,7 @@ class _HomePostPageState extends State<HomePostPage> {
                                           width: 5,
                                         ),
                                         kLikeAndComment(
-                                          post.likesCount!,
+                                          post.likesCount,
 
                                           // 'heart-svgrepo-com.svg',
                                           Colors.blue,
@@ -238,7 +238,7 @@ class _HomePostPageState extends State<HomePostPage> {
                                             context
                                                 .read<PostCubit>()
                                                 .handlePostLikeDislike(
-                                                    post.id ?? 0);
+                                                    post.id);
                                             context
                                                 .read<PostCubit>()
                                                 .postFetch();
@@ -248,7 +248,7 @@ class _HomePostPageState extends State<HomePostPage> {
                                         ),
                                         
                                         kLikeAndComment(
-                                          post.commentsCount!,
+                                          post.commentsCount,
                                           Colors.blue,
                                           () {
                                     
@@ -390,7 +390,7 @@ class _HomePostPageState extends State<HomePostPage> {
                   color: Colors.white,
                   image: DecorationImage(
                       image: NetworkImage(
-                        posts.cover!,
+                        posts.cover,
                       ),
                       fit: BoxFit.cover),
                 ),
