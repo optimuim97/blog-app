@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/auth/logic/auth_cubit_cubit.dart';
 import 'package:blogapp/features/auth/view/registrer_page.dart';
 import 'package:blogapp/features/home/home_menu.dart';
@@ -90,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         // ignore: unnecessary_null_comparison
                         child: Text( s!=null ?
                       s.toString():'',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: colorTextBold),
                     ));
                   },
                 ),

@@ -1,3 +1,4 @@
+import 'package:blogapp/constant.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ final bool obscureText;
       child: TextField(
         controller: nameController,
         style:
-            TextStyle(fontSize: 16.0, color: Colors.black),
+            TextStyle(fontSize: 16.0, color: colortext),
               obscureText: obscureText,
         decoration: InputDecoration(
           filled: true,
@@ -25,7 +26,7 @@ final bool obscureText;
           contentPadding: const EdgeInsets.only(
               left: 14.0, bottom: 8.0, top: 8.0),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
+            borderSide: BorderSide(color: colorTextBold),
             borderRadius: BorderRadius.circular(15.7),
           ),
           enabledBorder: OutlineInputBorder(

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 
 import 'package:blogapp/features/entity/logic/entity_cubit.dart';
+import 'package:blogapp/features/entity/view/entity_profile_page.dart';
 import 'package:blogapp/models/entity_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,11 @@ class _EntityPageState extends State<EntityPage> {
             ),
             Center(
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => EntityProfilePage( entity)));
+                    
+                  },
                   child: Text(
                     entity.name.toString().toUpperCase(),
                     style: TextStyle(fontSize: 12, color: Colors.black),

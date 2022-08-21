@@ -1,8 +1,9 @@
 // ----- STRINGS ------
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // const baseURL = 'http://192.168.121.201:8000/api';
-const baseURL = 'http://192.168.1.74:8000/api';
+const baseURL = 'http://192.168.7.201:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
@@ -11,6 +12,9 @@ const entityUrl=baseURL +'/entities';
 const postsURL = baseURL + '/posts';
 const commentsURL = baseURL + '/comments';
 const postLimitUrl=baseURL+'/posts-limited';
+const Color colortext=Color(0xFF2C3A4B);
+const Color colorTextBold=Color(0xFF09101D);
+const Color colorBorder=Color(0xFFEBEEF2);
 // ----- Errors -----
 const serverError = 'Erreur du serveur';
 const unauthorized = 'Non autorisé';
@@ -60,7 +64,7 @@ Row kLoginRegisterHint(String text, String label, Function onTap) {
 
 // likes and comment btn
 
-Widget kLikeAndComment(int value, Color color, Function onTap ,double width , IconData icon) {
+Widget kLikeAndComment(int value, Color color, Function onTap ,double width , String icon) {
   return SizedBox(
     width: 60,
     child: Expanded(
@@ -73,14 +77,14 @@ Widget kLikeAndComment(int value, Color color, Function onTap ,double width , Ic
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-//                 SvgPicture.asset('assets/images/${icon}',
-// width: width,
-//                     color: color, semanticsLabel: 'A red up arrow'),
-                Icon(
-                  icon,
-                  size: 20,
-                  color: color,
-                ),
+                SvgPicture.asset('assets/images/${icon}',
+width: width,
+                    color: color, semanticsLabel: 'A red up arrow'),
+                // Icon(
+                //   icon,
+                //   size: 20,
+                //   color: color,
+                // ),
                 SizedBox(width: 4),
                 Text('$value',style: TextStyle(color: color),)
               ],

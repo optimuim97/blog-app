@@ -52,112 +52,63 @@ class _PostListItemState extends State<PostListItem> {
                     Post post = _postList[index];
             
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PostDetail(
-                                  post: post,
-                                )));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left :20.0,right: 20.0,top: 10),
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: Colors.grey.shade300, width: 1),
-                              color: Colors.white),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                             PostImageItem(post: post)
-                                ,
-                              SizedBox(
-                                width: 10,
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PostDetail(
+                                post: post,
+                              )));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 5.0, top: 10),
+                      child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: colorBorder, width: 1),
+                            color: Colors.white),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PostImageItem(post: post),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                                child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 15.0,
+                                right: 5,
                               ),
-                              Expanded(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 15.0, right: 10, ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                
-                                 
-                                    ListTile(
-                                      title:     Text(
-                                      '' +
-                                          post.title.toString().toUpperCase(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      '' + post.title.toString().toLowerCase(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                          color: colorTextBold,
                                           fontSize: 16),
                                     ),
-                                      subtitle: _buildRowBtnLikeAndComment(post, context),
-                                      
-                                      
-                                      contentPadding: EdgeInsets.all(0),
-                                    ),
-                                    _buildEntiTyContent(post),
-                                  ],
-                                ),
-                              ))
-                            ],
-                          ),
+                                    subtitle: _buildEntiTyFooter(post),
+                                    contentPadding: EdgeInsets.all(0),
+                                  ),
+                                  _buildRowBtnLikeAndComment(post, context),
+                                ],
+                              ),
+                            ))
+                          ],
                         ),
                       ),
-                    );
+                    ),
+                  );
+              
                   }));
         },
       );
   }
 
-    Widget _buildEntiTyContent(Post post) {
-    return Row(
-                                      children: [
-                                        Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                          image: post.publisherImage != null
-                                              ? DecorationImage(
-                                                  image: NetworkImage(
-                                                      '${post.publisherImage}'),
-                                                  fit: BoxFit.cover)
-                                              : null,
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          color: Colors.blue),
-                                      child: post.publisherImage != null
-                                          ? SizedBox()
-                                          : Center(
-                                              child: Text(
-                                                post.publisherName!.length >
-                                                        1
-                                                    ? post.publisherName
-                                                        .toString()
-                                                        .substring(0, 1)
-                                                    : '',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontSize: 20),
-                                              ),
-                                            ),
-                                    ),SizedBox(width: 10,),
-                                        Text(
-                                          post.publisherName.toString(),
-                                          style: TextStyle(
-                                              fontWeight:
-                                                  FontWeight.bold,
-                                              color: Colors.grey,
-                                              fontSize: 14),
-                                        ),
-                                      ],
-                                    );
-  }
 
   Widget _buildRowBtnLikeAndComment(Post post, BuildContext context) {
     return Padding(
@@ -183,7 +134,7 @@ class _PostListItemState extends State<PostListItem> {
                                                 .postFetch();
                                           },
                                           27,
-                                          Icons.favorite_outline_sharp,
+                                         'vector.svg',
                                         ),
                                         
                                         kLikeAndComment(
@@ -193,12 +144,56 @@ class _PostListItemState extends State<PostListItem> {
                                     
                                           },
                                           30,
-                                          Icons.comment,
+                                         'comment.svg',
                                         ),
                                         IconButton(onPressed: (){}, icon: Icon(Icons.bookmark_border,color: Colors.blue,))
                                       ],
                                     ),
                                   );
+  }
+
+
+  Widget _buildEntiTyFooter(Post post) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+                image: post.publisherImage != null
+                    ? DecorationImage(
+                        image: NetworkImage('${post.publisherImage}'),
+                        fit: BoxFit.cover)
+                    : null,
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.red),
+            child: post.publisherImage != null
+                ? SizedBox()
+                : Center(
+                    child: Text(
+                      post.publisherName!.length > 1
+                          ? post.publisherName.toString().substring(0, 1)
+                          : '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: colorTextBold,
+                          fontSize: 15),
+                    ),
+                  ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            post.publisherName.toString().toUpperCase(),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: colortext, fontSize: 14),
+          ),
+        ],
+      ),
+    );
   }
 
 }

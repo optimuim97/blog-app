@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 
+import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/auth/logic/auth_cubit_cubit.dart';
 import 'package:blogapp/features/auth/view/login_page.dart';
 import 'package:blogapp/features/home/home_menu.dart';
@@ -68,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Center(
                   child: const Text(
                     'Creer votre compte',
-                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold,color: colorTextBold),
                   ),
                 ),
                 // const SizedBox(
