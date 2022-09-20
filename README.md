@@ -1,1 +1,3 @@
-Blog App => Flutter Laravel
+Blog App
+Flutter => Front
+Laravel => Api
