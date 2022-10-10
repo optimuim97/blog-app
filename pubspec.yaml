@@ -37,6 +37,8 @@ dependencies:
   flutter_svg: ^1.0.3
   carousel_slider: ^4.1.1
   html_editor_enhanced: ^2.4.0+1
+  shimmer: ^2.0.0
+  flutter_html: ^0.11.1
   
 
 dev_dependencies:

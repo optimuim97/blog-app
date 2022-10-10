@@ -3,13 +3,15 @@ import 'dart:developer';
 import 'package:blogapp/constant.dart';
 import 'package:blogapp/constant.dart';
 import 'package:blogapp/features/entity/logic/entity_cubit.dart';
+import 'package:blogapp/features/post/post_edit/view/post_edit_page.dart';
 
 import 'package:blogapp/features/post/post_page/logic/post_cubit.dart';
 import 'package:blogapp/features/post/post_page/post_detail.dart';
 import 'package:blogapp/features/widget/post_image_item.dart';
 import 'package:blogapp/models/entity_model.dart';
 import 'package:blogapp/models/post.dart';
-
+import 'package:blogapp/services/user_service.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,11 +29,24 @@ class _HomePostPageState extends State<HomePostPage> {
   List<dynamic> _postList = [];
   List<dynamic> _postListLimit = [];
   List<dynamic> _entityList = [];
+  bool isLoading = true;
+  int userId = 0;
+
   @override
+  Future<void> getId() async {
+    userId = await getUserId();
+  }
+
   void initState() {
     context.read<PostCubit>().postFetch();
     context.read<PostCubit>().getPostLimit();
     context.read<EntityCubit>().getEntity();
+    getId();
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.initState();
   }
 
@@ -105,68 +120,127 @@ class _HomePostPageState extends State<HomePostPage> {
 
           }
         }
-        return SizedBox(
-            height:
-                MediaQuery.of(context).size.height * 0.25 * _postList.length,
-            child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _postList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Post post = _postList[index];
-                  log(post.cover.toString());
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PostDetail(
-                                post: post,
-                              )));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20.0, right: 5.0, top: 10),
-                      child: Container(
-                        height: 160,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: colorBorder, width: 1),
-                            color: Colors.white),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PostImageItem(post: post),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                                child: Padding(
+        return isLoading
+            ? Shimmer.fromColors(
+                baseColor: Colors.blue.shade200,
+                highlightColor: Colors.blue.shade500,
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25 * 10,
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
                               padding: const EdgeInsets.only(
-                                top: 15.0,
-                                right: 5,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ListTile(
-                                    title: Text(
-                                      '' + post.title.toString().toLowerCase(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: colorTextBold,
-                                          fontSize: 16),
-                                    ),
-                                    subtitle: _buildEntiTyFooter(post),
-                                    contentPadding: EdgeInsets.all(0),
+                                  left: 20.0, right: 5.0, top: 10),
+                              child: Container(
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: colorBorder, width: 1),
+                                      color: Colors.blue),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.25,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 15.0,
+                                                  right: 5,
+                                                ),
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [])))
+                                      ])));
+                        })),
+              )
+            : SizedBox(
+                height: MediaQuery.of(context).size.height *
+                    0.25 *
+                    _postList.length,
+                child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _postList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Post post = _postList[index];
+                      log(post.cover.toString());
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => PostDetail(
+                                        post: post,
+                                      )),
+                              (Route<dynamic> route) => false);
+                          // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          //     builder: (context) => PostDetail(
+                          //           post: post,
+                          //         )));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, right: 5.0, top: 10),
+                          child: Container(
+                            height: 160,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border:
+                                    Border.all(color: colorBorder, width: 1),
+                                color: Colors.white),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PostImageItem(post: post),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 15.0,
+                                    right: 5,
                                   ),
-                                  _buildRowBtnLikeAndComment(post, context),
-                                ],
-                              ),
-                            ))
-                          ],
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ListTile(
+                                        title: Text(
+                                          '' +
+                                              post.title
+                                                  .toString()
+                                                  .toLowerCase(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: colorTextBold,
+                                              fontSize: 16),
+                                        ),
+                                        subtitle: _buildEntiTyFooter(post),
+                                        contentPadding: EdgeInsets.all(0),
+                                      ),
+                                      _buildRowBtnLikeAndComment(post, context),
+                                    ],
+                                  ),
+                                ))
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }));
+                      );
+                    }));
       },
     );
   }
@@ -215,6 +289,7 @@ class _HomePostPageState extends State<HomePostPage> {
   }
 
   Widget _buildRowBtnLikeAndComment(Post post, BuildContext context) {
+    log(post.publisherId.toString() + '==' + userId.toString());
     return Padding(
       padding: EdgeInsets.only(
         right: 5,
@@ -245,12 +320,33 @@ class _HomePostPageState extends State<HomePostPage> {
             'comment.svg',
           ),
           Spacer(),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.bookmark_border,
-                color: Colors.blue,
-              ))
+          post.publisherId == userId
+              ? PopupMenuButton(
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Icon(
+                        Icons.more_vert,
+                        color: Colors.blue,
+                      )),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(child: Text('Modifier'), value: 'edit'),
+                    PopupMenuItem(child: Text('Delete'), value: 'delete')
+                  ],
+                  onSelected: (val) {
+                    if (val == 'edit') {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => PostEditPage(
+                                    post: post,
+                                    btnTitle: 'Modification du post',
+                                  )),
+                          (Route<dynamic> route) => false);
+                    } else {
+                      // _handleDeletePost(post.id ?? 0);
+                    }
+                  },
+                )
+              : SizedBox(),
         ],
       ),
     );
@@ -266,15 +362,16 @@ class _HomePostPageState extends State<HomePostPage> {
         }
         return SizedBox(
           height: 50,
-          child: ListView.builder(
-              itemCount: _entityList.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                EntityModel entity = _entityList[index];
-                return Row(
-                  children: [
-                    index == 0
-                        ? Container(
+          child: isLoading
+              ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Shimmer.fromColors(
+                        baseColor: Colors.blue.shade200,
+                        highlightColor: Colors.blue.shade500,
+                        child: Container(
                             padding:
                                 const EdgeInsets.only(left: 8.0, right: 8.0),
                             child: Container(
@@ -286,52 +383,75 @@ class _HomePostPageState extends State<HomePostPage> {
                                   border:
                                       Border.all(color: colorBorder, width: 1),
                                   color: Colors.white),
-                              child: Center(
-                                  child: TextButton(
-                                onPressed: () {
-                                  context.read<PostCubit>().postFetch();
-                                },
-                                child: Text(
-                                  'Tous',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: colortext,
-                                      fontWeight: FontWeight.bold),
+                            )));
+                  })
+              : ListView.builder(
+                  itemCount: _entityList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    EntityModel entity = _entityList[index];
+                    return Row(
+                      children: [
+                        index == 0
+                            ? Container(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: Container(
+                                  width: 150,
+                                  height: 48,
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      border: Border.all(
+                                          color: colorBorder, width: 1),
+                                      color: Colors.white),
+                                  child: Center(
+                                      child: TextButton(
+                                    onPressed: () {
+                                      context.read<PostCubit>().postFetch();
+                                    },
+                                    child: Text(
+                                      'Tous',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: colortext,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
                                 ),
-                              )),
-                            ),
-                          )
-                        : Container(),
-                    Container(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Container(
-                        width: 185,
-                        height: 48,
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(color: colorBorder, width: 1),
-                            color: Colors.white),
-                        child: Center(
-                            child: TextButton(
-                          onPressed: () {
-                            context
-                                .read<PostCubit>()
-                                .getPostsByEntity(entity.id!.toInt());
-                          },
-                          child: Text(
-                            entity.name.toString(),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: colorTextBold,
-                                fontWeight: FontWeight.bold),
+                              )
+                            : Container(),
+                        Container(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Container(
+                            width: 185,
+                            height: 48,
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                border:
+                                    Border.all(color: colorBorder, width: 1),
+                                color: Colors.white),
+                            child: Center(
+                                child: TextButton(
+                              onPressed: () {
+                                context
+                                    .read<PostCubit>()
+                                    .getPostsByEntity(entity.id!.toInt());
+                              },
+                              child: Text(
+                                entity.name.toString(),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: colorTextBold,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )),
                           ),
-                        )),
-                      ),
-                    ),
-                  ],
-                );
-              }),
+                        ),
+                      ],
+                    );
+                  }),
         );
       },
     );
@@ -349,26 +469,40 @@ class _HomePostPageState extends State<HomePostPage> {
 
         }
       }
-      return CarouselSlider(
-        carouselController: _controller,
-        options: CarouselOptions(
-            height: 200.0,
-            viewportFraction: 0.8,
-            autoPlay: false,
-            enlargeCenterPage: true,
-            aspectRatio: 2.0,
-            onPageChanged: (index, reason) {
-              current = index;
-            }),
-        items: _postList.map<Widget>((_postLists) {
-          Post posts = _postLists;
-          return Builder(
-            builder: (BuildContext context) {
-              return _buildCarouselItem(context, posts);
-            },
-          );
-        }).toList(),
-      );
+      return isLoading
+          ? Shimmer.fromColors(
+              baseColor: Colors.blue.shade200,
+              highlightColor: Colors.blue.shade500,
+              child: Center(
+                  child: Container(
+                height: 200,
+                padding: EdgeInsets.only(left: 20, right: 20, top: 50),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+              )))
+          : CarouselSlider(
+              carouselController: _controller,
+              options: CarouselOptions(
+                  height: 200.0,
+                  viewportFraction: 0.8,
+                  autoPlay: false,
+                  enlargeCenterPage: true,
+                  aspectRatio: 2.0,
+                  onPageChanged: (index, reason) {
+                    current = index;
+                  }),
+              items: _postList.map<Widget>((_postLists) {
+                Post posts = _postLists;
+                return Builder(
+                  builder: (BuildContext context) {
+                    return _buildCarouselItem(context, posts);
+                  },
+                );
+              }).toList(),
+            );
     });
   }
 

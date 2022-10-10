@@ -131,7 +131,7 @@ Future<ApiResponse> editPost(int postId,String title, String body) async {
       'title':title,
       'description': body
     });
-
+log(response.body.toString());
     switch(response.statusCode){
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];

@@ -115,7 +115,7 @@ class _PostEditPageState extends State<PostEditPage> {
                         ? SizedBox()
                         : _buildBtnAddImage(),
 
-                    htmlEditor(controller: controller),
+                    htmlEditorPage(controller: controller, desc:widget.post!.description),
                   ],
                 ),
               ),
@@ -248,7 +248,7 @@ class _PostEditPageState extends State<PostEditPage> {
             log(txt);
             context
                 .read<PostEditCubit>()
-                .createPost(_txtControllerTitle.text, 'txt', _imageFile);
+                .createPost(_txtControllerTitle.text, txt, _imageFile);
           } else {
             String txt = await controller.getText();
             context

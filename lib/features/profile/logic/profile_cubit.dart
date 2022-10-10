@@ -19,35 +19,24 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future getUser() async {
     emit(ProfileStateLoading());
     ApiResponse response = await _userApiprovider.getUserDetail();
-    log(response.error.toString());
+log(response.toString());
     if (response.error == null) {
       final user = response.data as User;
       emit(ProfileStateLoaded(user));
     } else if (response.error == unauthorized) {
       log('message');
-    } else {
-      
-    }
+    } else {}
   }
-    //update profile
-  Future updateProfile(String name,File imageFile) async {
+
+  //update profile
+  Future updateProfile(String name, File imageFile) async {
+    log('reading...');
     ApiResponse response =
         await _userApiprovider.updateUser(name, getStringImage(imageFile));
-    // setState(() {
-    //   loading = false;
-    // });
+
     if (response.error == null) {
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(SnackBar(content: Text('${response.data}')));
     } else if (response.error == unauthorized) {
-      // logout().then((value) => {
-      //       Navigator.of(context).pushAndRemoveUntil(
-      //           MaterialPageRoute(builder: (context) => Login()),
-      //           (route) => false)
-      //     });
-    } else {
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(SnackBar(content: Text('${response.error}')));
-    }
+      log('error message');
+    } else {}
   }
 }
