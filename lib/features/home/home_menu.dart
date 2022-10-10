@@ -21,7 +21,7 @@ class _HomeMenuState extends State<HomeMenu> {
   //   btnTitle: 'Poster',
   //   post: null,
   // );
-  final Widget _screen4 = const HomePostPage();
+  // final Widget _screen4 = const HomePostPage();
   final Widget _screen5 = const ProfilePage();
   int selectedIndex = 0;
 
@@ -86,12 +86,12 @@ class _HomeMenuState extends State<HomeMenu> {
               onTap: () {
                 onTapHandler(1);
               }),
-          NavigationBarItem(
-              icon: Icons.shopping_bag_outlined,
-              color: Colors.blue,
-              onTap: () {
-                onTapHandler(3);
-              }),
+          // NavigationBarItem(
+          //     icon: Icons.shopping_bag_outlined,
+          //     color: Colors.blue,
+          //     onTap: () {
+          //       onTapHandler(3);
+          //     }),
           NavigationBarItem(
               icon: Icons.person_outline,
               color: Colors.blue,
@@ -119,9 +119,10 @@ class _HomeMenuState extends State<HomeMenu> {
       return _screen2;
       // } else if (selectedIndex == 2) {
       //   return _screen3;}
-    } else if (selectedIndex == 2) {
-      return _screen4;
     }
+    // } else if (selectedIndex == 2) {
+    //   return _screen4;
+    // }
     return _screen5;
   }
 
