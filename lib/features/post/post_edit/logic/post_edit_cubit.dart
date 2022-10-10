@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -20,9 +21,9 @@ class PostEditCubit extends Cubit<PostEditState> {
         ? null
         : UserApiProvider().getStringImage(_imageFile);
     ApiResponse response = await _apiProvider.createPost(title,text, image);
-
+log(response.data.toString());
     if (response.error == null) {
-      emit(PostEditStateFailed('1'));
+      emit(PostEditStateSucces('1'));
     } else if (response.error == unauthorized) {
       emit(PostEditStateFailed('2'));
     } else {
@@ -35,7 +36,7 @@ class PostEditCubit extends Cubit<PostEditState> {
     emit(PostEditStateLoading());
     ApiResponse response = await _apiProvider.editPost(postId, title,text);
     if (response.error == null) {
-      emit(PostEditStateFailed('1'));
+      emit(PostEditStateSucces('1'));
     } else if (response.error == unauthorized) {
       emit(PostEditStateFailed('2'));
     } else {

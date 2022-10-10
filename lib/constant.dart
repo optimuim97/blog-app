@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // const baseURL = 'http://192.168.121.201:8000/api';
-const baseURL = 'http://192.168.7.201:8000/api';
+const baseURL = 'http://192.168.1.165:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
+const userUrlUpdate=baseURL+'user-update';
 const entityUrl=baseURL +'/entities';
 const postsURL = baseURL + '/posts';
 const commentsURL = baseURL + '/comments';

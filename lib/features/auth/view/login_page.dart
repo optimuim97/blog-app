@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     return Center(
                         // ignore: unnecessary_null_comparison
-                        child: Text( s!=null ?
+                        child: Text( s==null ?
                       s.toString():'',
                       style: TextStyle(color: colorTextBold),
                     ));

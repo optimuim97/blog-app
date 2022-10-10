@@ -22,7 +22,7 @@ class PostImageItem extends StatelessWidget {
         // height: MediaQuery.of(context).size.height *
         //     0.2,
         decoration: BoxDecoration(
-          border: Border.all(color: colorBorder, width: 1),
+          border: Border.all(color: Colors.black, width: 1),
           color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
@@ -42,17 +42,18 @@ class PostImageItem extends StatelessWidget {
               topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
         ),
       ),
+      
       errorWidget: (context, url, error) => Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: colorBorder, width: 1),
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), bottomLeft: Radius.circular(10))),
+        // decoration: BoxDecoration(
+        //     border: Border.all(color: colorBorder, width: 1),
+        //     color: Colors.white,
+        //     borderRadius: BorderRadius.only(
+        //         topLeft: Radius.circular(10), bottomLeft: Radius.circular(10))),
 
-        width: MediaQuery.of(context).size.width * 0.33,
+        width: MediaQuery.of(context).size.width * 0.05,
         // padding: EdgeInsets.all(10),
         height: 160,
-        child: Center(child: Image.asset('assets/images/bgposter.jpg')),
+        // child: Center(child: Image.asset('assets/images/bgposter.jpg')),
       ),
     );
   }

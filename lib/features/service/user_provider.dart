@@ -92,49 +92,81 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
 Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
-  try {
+  
     String token = await getToken();
     log(token);
-    final response = await http.get(Uri.parse(userURL), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    });
-
+    final response = await http.get(Uri.parse(userURL),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+    try {
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body)['data']);
+      log(jsonDecode(response.body).toString());
+        apiResponse.data =  User.fromJson(jsonDecode(response.body));
         break;
       case 401:
         apiResponse.error = unauthorized;
         break;
       default:
+        print(response.body);
         apiResponse.error = somethingWentWrong;
         break;
     }
   } catch (e) {
     apiResponse.error = serverError;
-    log(apiResponse.data.toString());
   }
   return apiResponse;
 }
+
+// Future<ApiResponse> getUserDetail() async {
+//   ApiResponse apiResponse = ApiResponse();
+//   try {
+//     String token = await getToken();
+//     log(token);
+//     final response = await http.get(Uri.parse(userURL), headers: {
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer $token'
+//     });
+
+//     switch (response.statusCode) {
+//       case 200:
+//         apiResponse.data = User.fromJson(jsonDecode(response.body)['data']);
+//         break;
+//       case 401:
+//         apiResponse.error = unauthorized;
+//         break;
+//       default:
+//         apiResponse.error = somethingWentWrong;
+//         break;
+//     }
+//   } catch (e) {
+//     apiResponse.error = serverError;
+//     log(apiResponse.data.toString());
+//   }
+//   return apiResponse;
+// }
 
 // Update user
 Future<ApiResponse> updateUser(String name, String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.put(Uri.parse(userURL),
+    final response = await http.post(Uri.parse(userUrlUpdate),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token'
-        },
-        body: image == null
+        }, body: image == null
             ? {
                 'name': name,
               }
-            : {'name': name, 'image': image});
+            : {'name': name, 'image': image}
+      );
+       
     // user can update his/her name or name and image
-
+log(response.body.toString());
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];

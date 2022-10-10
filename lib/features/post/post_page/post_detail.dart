@@ -1,17 +1,18 @@
 import 'dart:developer';
 
+import 'package:blogapp/features/home/home_menu.dart';
 import 'package:blogapp/features/post/post_comment/logic/post_comment_cubit.dart';
+import 'package:blogapp/features/post/post_page/post_page.dart';
 
 import 'package:blogapp/features/widget/post_detail_image_Item.dart';
 import 'package:blogapp/features/widget/textfield_widget.dart';
-
+import 'package:flutter_html/flutter_html.dart';
 import 'package:blogapp/models/comment.dart';
 import 'package:blogapp/models/post.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 
 class PostDetail extends StatefulWidget {
   const PostDetail({Key? key, required this.post}) : super(key: key);
@@ -22,11 +23,10 @@ class PostDetail extends StatefulWidget {
 
 class _PostDetailState extends State<PostDetail> {
   List<dynamic> _commentsList = [];
- 
+
   int userId = 0;
   int _editCommentId = 0;
   TextEditingController _txtCommentController = TextEditingController();
-
 
   @override
   void initState() {
@@ -47,7 +47,9 @@ class _PostDetailState extends State<PostDetail> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomeMenu()),
+                (Route<dynamic> route) => false);
           },
         ),
       ),
@@ -72,6 +74,20 @@ class _PostDetailState extends State<PostDetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 22),
                 ),
+                Html(
+                  data: widget.post.description!,
+                  onImageError: (exception, stackTrace) {
+                    print(exception);
+                  },
+                ),
+
+                //   Text(
+                //   widget.post.description!,
+                //   style: TextStyle(
+                //       color: Colors.grey,
+                //       fontWeight: FontWeight.bold,
+                //       fontSize: 15),
+                // ),
                 SizedBox(
                   height: 10,
                 ),
@@ -223,6 +239,9 @@ class _PostDetailState extends State<PostDetail> {
                     .editComment(_editCommentId, _txtCommentController.text);
                 context.read<PostCommentCubit>().getComments(widget.post.id!);
                 _txtCommentController.text = '';
+                setState(() {
+                  _editCommentId = 0;
+                });
               } else {
                 context
                     .read<PostCommentCubit>()
@@ -230,6 +249,9 @@ class _PostDetailState extends State<PostDetail> {
 
                 context.read<PostCommentCubit>().getComments(widget.post.id!);
                 _txtCommentController.text = '';
+                setState(() {
+                  _editCommentId = 0;
+                });
                 // _createComment();
               }
             }
@@ -247,7 +269,7 @@ class _PostDetailState extends State<PostDetail> {
           color: Colors.blue,
         ),
         Text(
-          widget.post.likesCount!.toString() + ' jaimes',
+          widget.post.likesCount!.toString() + " j'aimes",
           style: TextStyle(
               color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 13),
         ),
@@ -264,30 +286,38 @@ class _PostDetailState extends State<PostDetail> {
   }
 
   Widget _buildEntiTyItemPost() {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-          image: widget.post.publisherImage != null
-              ? DecorationImage(
-                  image: NetworkImage('${widget.post.publisherImage}'),
-                  fit: BoxFit.cover)
-              : null,
-          borderRadius: BorderRadius.circular(25),
-          color: Colors.blue),
-      child: widget.post.publisherImage != null
-          ? SizedBox()
-          : Center(
-              child: Text(
-                widget.post.publisherName!.length > 1
-                    ? widget.post.publisherName.toString().substring(0, 1)
-                    : '',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 20),
-              ),
+    return Row(
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+              image: widget.post.publisherImage != null
+                  ? DecorationImage(
+                      image: NetworkImage('${widget.post.publisherImage}'),
+                      fit: BoxFit.cover)
+                  : null,
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.blue),
+          child: Center(
+            child: Text(
+              widget.post.publisherName!.length > 1
+                  ? widget.post.publisherName.toString().substring(0, 1)
+                  : '',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20),
             ),
+          ),
+        ),
+        Expanded(
+            child: Text(
+          widget.post.publisherName!,
+          style: TextStyle(
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        ))
+      ],
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:blogapp/features/widget/post_image_item.dart';
 import 'package:blogapp/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PostListItem extends StatefulWidget {
   const PostListItem({ Key? key }) : super(key: key);
@@ -15,10 +16,15 @@ class PostListItem extends StatefulWidget {
 
 class _PostListItemState extends State<PostListItem> {
     List<dynamic> _postList = [];
+    bool isLoading = true;
       @override
   void initState() {
     context.read<PostCubit>().postFetch();
-
+  Future.delayed(const Duration(milliseconds: 1500), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.initState();
   }
   @override
@@ -42,7 +48,54 @@ class _PostListItemState extends State<PostListItem> {
 
             }
           }
-          return SizedBox(
+          return isLoading
+            ? Shimmer.fromColors(
+                baseColor: Colors.blue.shade200,
+                highlightColor: Colors.blue.shade500,
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25 * 10,
+                    child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 5.0, top: 10),
+                              child: Container(
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: colorBorder, width: 1),
+                                      color: Colors.blue),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.25,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 15.0,
+                                                  right: 5,
+                                                ),
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [])))
+                                      ])));
+                        })),
+              )
+            : SizedBox(
               height:
                   MediaQuery.of(context).size.height * 0.25 * _postList.length,
               child: ListView.builder(

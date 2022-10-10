@@ -35,10 +35,15 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+  @override
+  void initState() {
+    context.read<ProfileCubit>().getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProfileCubit>().getUser();
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -88,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },child: Text('Deconnexion')),
                   TextFieldWidget(
                       nameController: txtNameController,
-                      lib: 'Email',
+                      lib: 'Nom d utilisateur',
                       obscureText: false),
                   TextFieldWidget(
                       nameController: txtEmailController,

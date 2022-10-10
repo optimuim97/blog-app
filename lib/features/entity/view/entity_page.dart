@@ -7,6 +7,7 @@ import 'package:blogapp/models/entity_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EntityPage extends StatefulWidget {
   const EntityPage({Key? key}) : super(key: key);
@@ -17,9 +18,15 @@ class EntityPage extends StatefulWidget {
 
 class _EntityPageState extends State<EntityPage> {
   List<dynamic> _entityList = [];
+   bool isLoading = true;
   @override
   void initState() {
     context.read<EntityCubit>().getEntity();
+      Future.delayed(const Duration(milliseconds: 1000), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.initState();
   }
 
@@ -36,7 +43,32 @@ class _EntityPageState extends State<EntityPage> {
             
               _entityList = state.post.data as List<dynamic>;
             }
-            return _buildGrid(context);
+            return isLoading ? Shimmer.fromColors(
+                baseColor: Colors.blue.shade200,
+                highlightColor: Colors.blue.shade500,
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25 * 10,child:
+                    GridView.builder(
+                  itemCount: 10,
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 1,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                
+                    return Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            color: Colors.white),
+        );})
+                    ))
+            
+            :  _buildGrid(context);
           },
         ),
       ]),
