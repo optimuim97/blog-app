@@ -6,13 +6,13 @@ import 'package:blogapp/features/post/post_page/post_page.dart';
 
 import 'package:blogapp/features/widget/post_detail_image_Item.dart';
 import 'package:blogapp/features/widget/textfield_widget.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:blogapp/models/comment.dart';
 import 'package:blogapp/models/post.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
+// import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 
 class PostDetail extends StatefulWidget {
   const PostDetail({Key? key, required this.post}) : super(key: key);
@@ -74,12 +74,18 @@ class _PostDetailState extends State<PostDetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 22),
                 ),
-                Html(
-                  data: widget.post.description!,
-                  onImageError: (exception, stackTrace) {
-                    print(exception);
-                  },
-                ),
+
+                Text(widget.post.description!,
+                    style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+                // Html(
+                //   data: widget.post.description!,
+                //   onImageError: (exception, stackTrace) {
+                //     print(exception);
+                //   },
+                // ),
 
                 //   Text(
                 //   widget.post.description!,
